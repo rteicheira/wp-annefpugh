@@ -1,13 +1,15 @@
 /* ==========================================================================
-   AnneFPugh Therapy — base styles
+   Anne Pugh Therapy — base styles
    ========================================================================== */
 
 :root {
 	--color-bg: #faf8f5;
 	--color-text: #2f2b28;
-	--color-accent: #6b8f80;
+	--color-accent: #4c6b5e;       /* 5.5:1 on --color-bg, 5.9:1 under white text */
+	--color-accent-hover: #3a5348; /* darker, for button/link hover states */
 	--color-border: #e4ddd4;
 	--font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+	--font-heading: Georgia, "Times New Roman", serif;
 	--max-width: 960px;
 }
 
@@ -23,9 +25,71 @@ body {
 	line-height: 1.6;
 }
 
+h1,
+h2,
+h3 {
+	font-family: var(--font-heading);
+	line-height: 1.25;
+}
+
 a {
 	color: var(--color-accent);
 }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+	outline: 3px solid var(--color-accent);
+	outline-offset: 2px;
+}
+
+.screen-reader-text {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(1px, 1px, 1px, 1px);
+	white-space: nowrap;
+}
+
+.skip-link {
+	z-index: 100;
+}
+
+.skip-link:focus {
+	position: fixed;
+	top: 0.5rem;
+	left: 0.5rem;
+	width: auto;
+	height: auto;
+	clip: auto;
+	padding: 0.75rem 1.25rem;
+	background: var(--color-text);
+	color: #fff;
+	border-radius: 4px;
+}
+
+.button,
+.hero-cta,
+.cta-link {
+	display: inline-block;
+	padding: 0.75rem 1.5rem;
+	min-height: 44px;
+	background: var(--color-accent);
+	color: #fff;
+	text-decoration: none;
+	border-radius: 4px;
+	font-weight: 600;
+}
+
+.button:hover,
+.hero-cta:hover,
+.cta-link:hover {
+	background: var(--color-accent-hover);
+}
+
+/* ---- Header / nav ---- */
 
 .site-header,
 .site-main,
@@ -41,6 +105,15 @@ a {
 	justify-content: space-between;
 	flex-wrap: wrap;
 	gap: 1rem;
+	position: relative;
+}
+
+.site-title {
+	font-family: var(--font-heading);
+	font-size: 1.25rem;
+	font-weight: 700;
+	text-decoration: none;
+	color: var(--color-text);
 }
 
 .primary-nav ul {
@@ -51,11 +124,92 @@ a {
 	padding: 0;
 }
 
+.primary-nav a {
+	text-decoration: none;
+	padding: 0.5rem 0;
+	display: inline-block;
+}
+
+.nav-toggle {
+	display: none;
+	width: 44px;
+	height: 44px;
+	border: 1px solid var(--color-border);
+	border-radius: 4px;
+	background: transparent;
+	cursor: pointer;
+	position: relative;
+}
+
+.nav-toggle-icon,
+.nav-toggle-icon::before,
+.nav-toggle-icon::after {
+	content: "";
+	position: absolute;
+	left: 12px;
+	right: 12px;
+	height: 2px;
+	background: var(--color-text);
+}
+
+.nav-toggle-icon {
+	top: 21px;
+}
+
+.nav-toggle-icon::before {
+	top: -7px;
+}
+
+.nav-toggle-icon::after {
+	top: 7px;
+}
+
+@media (max-width: 640px) {
+	.nav-toggle {
+		display: block;
+	}
+
+	.primary-nav {
+		display: none;
+		width: 100%;
+		order: 3;
+	}
+
+	.primary-nav.is-open {
+		display: block;
+	}
+
+	.primary-nav ul {
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+}
+
+/* ---- Hero ---- */
+
 .hero {
 	padding: 3rem 1.5rem;
 	text-align: center;
 	border-bottom: 1px solid var(--color-border);
 }
+
+.hero-title {
+	margin-bottom: 0.5rem;
+}
+
+.hero-tagline {
+	font-size: 1.15rem;
+	max-width: 40rem;
+	margin: 0 auto 0.5rem;
+}
+
+.hero-service-area {
+	color: #5c5448;
+	max-width: 36rem;
+	margin: 0 auto 1.5rem;
+}
+
+/* ---- Services teaser ---- */
 
 .services-teaser,
 .cta {
@@ -64,6 +218,49 @@ a {
 	padding: 2rem 1.5rem;
 	text-align: center;
 }
+
+.specialty-list {
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.5rem;
+	margin: 1.5rem 0;
+	padding: 0;
+}
+
+.specialty-list li {
+	padding: 0.4rem 0.9rem;
+	background: #fff;
+	border: 1px solid var(--color-border);
+	border-radius: 999px;
+	font-size: 0.9rem;
+}
+
+/* ---- CTA ---- */
+
+.cta-actions {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+.cta-phone {
+	font-weight: 600;
+}
+
+/* ---- Page content ---- */
+
+.page-content,
+.front-page-content {
+	max-width: var(--max-width);
+	margin: 0 auto;
+	padding: 1.5rem;
+}
+
+/* ---- Contact form ---- */
 
 .contact-form {
 	display: grid;
@@ -107,8 +304,10 @@ a {
 	color: #7a2e21;
 }
 
+/* ---- Footer ---- */
+
 .site-footer {
 	border-top: 1px solid var(--color-border);
 	font-size: 0.875rem;
-	color: #6b6459;
+	color: #5c5448;
 }

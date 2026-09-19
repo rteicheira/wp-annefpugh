@@ -56,3 +56,4 @@ add_filter( 'pings_open', '__return_false', 20, 2 );
 
 require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/contact-form.php';
+require get_template_directory() . '/inc/seo.php';

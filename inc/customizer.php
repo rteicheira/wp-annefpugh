@@ -33,13 +33,26 @@ function annefpugh_customize_register( WP_Customize_Manager $wp_customize ) {
 			'label'             => __( 'Office Hours', 'annefpugh' ),
 			'sanitize_callback' => 'sanitize_text_field',
 		),
+		'annefpugh_service_area' => array(
+			'label'             => __( 'Service Area (shown in hero)', 'annefpugh' ),
+			'sanitize_callback' => 'sanitize_text_field',
+			'default'           => __( 'Now seeing clients in Berkeley, San Francisco & the East Bay — in person and via telehealth.', 'annefpugh' ),
+		),
+		'annefpugh_meta_description' => array(
+			'label'             => __( 'Homepage Meta Description (SEO, ~155 characters)', 'annefpugh' ),
+			'sanitize_callback' => 'sanitize_text_field',
+		),
+		'annefpugh_psychology_today_url' => array(
+			'label'             => __( 'Psychology Today Profile URL', 'annefpugh' ),
+			'sanitize_callback' => 'esc_url_raw',
+		),
 	);
 
 	foreach ( $fields as $id => $field ) {
 		$wp_customize->add_setting(
 			$id,
 			array(
-				'default'           => '',
+				'default'           => isset( $field['default'] ) ? $field['default'] : '',
 				'sanitize_callback' => $field['sanitize_callback'],
 			)
 		);

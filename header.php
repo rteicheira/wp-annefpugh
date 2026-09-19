@@ -12,6 +12,8 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
+<a class="skip-link screen-reader-text" href="#main"><?php esc_html_e( 'Skip to content', 'annefpugh' ); ?></a>
+
 <header class="site-header">
 	<div class="site-branding">
 		<?php if ( has_custom_logo() ) : ?>
@@ -21,7 +23,12 @@
 		<?php endif; ?>
 	</div>
 
-	<nav class="primary-nav" aria-label="<?php esc_attr_e( 'Primary', 'annefpugh' ); ?>">
+	<button type="button" class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">
+		<span class="screen-reader-text"><?php esc_html_e( 'Menu', 'annefpugh' ); ?></span>
+		<span class="nav-toggle-icon" aria-hidden="true"></span>
+	</button>
+
+	<nav id="primary-nav" class="primary-nav" aria-label="<?php esc_attr_e( 'Primary', 'annefpugh' ); ?>">
 		<?php
 		wp_nav_menu(
 			array(
@@ -34,4 +41,4 @@
 	</nav>
 </header>
 
-<main class="site-main">
+<main id="main" class="site-main">
