@@ -1,68 +1,79 @@
 <?php
 /**
- * Site footer.
+ * Site footer: crisis notice, practice details, quick links, legal links.
  */
+
+$annefpugh_phone   = annefpugh_mod( 'phone' );
+$annefpugh_email   = annefpugh_mod( 'email' );
+$annefpugh_address = annefpugh_mod( 'address' );
+$annefpugh_license = annefpugh_mod( 'license' );
 ?>
 </main>
 
 <footer class="site-footer">
-	<div class="crisis-notice">
-		<p>
-			<strong><?php esc_html_e( 'In crisis right now?', 'annefpugh' ); ?></strong>
-			<?php esc_html_e( 'Call or text', 'annefpugh' ); ?>
-			<a href="tel:988">988</a>
-			<?php esc_html_e( '(Suicide & Crisis Lifeline), or call', 'annefpugh' ); ?>
-			<a href="tel:911">911</a>
-			<?php esc_html_e( 'if you or someone else is in immediate danger. This website and email are not monitored for emergencies.', 'annefpugh' ); ?>
-		</p>
-	</div>
+	<div class="container">
+		<?php get_template_part( 'template-parts/crisis-notice' ); ?>
 
-	<div class="footer-columns">
-		<nav class="footer-nav" aria-label="<?php esc_attr_e( 'Footer', 'annefpugh' ); ?>">
-			<?php
-			wp_nav_menu(
-				array(
-					'theme_location' => 'footer',
-					'container'      => false,
-					'fallback_cb'    => false,
-				)
-			);
-			?>
-		</nav>
+		<div class="footer-grid">
+			<section class="footer-col" aria-labelledby="footer-practice-heading">
+				<h2 id="footer-practice-heading" class="footer-heading"><?php echo esc_html( annefpugh_therapist_name() ); ?></h2>
+				<?php if ( annefpugh_mod( 'therapist_credentials' ) ) : ?>
+					<p><?php echo esc_html( annefpugh_mod( 'therapist_credentials' ) ); ?></p>
+				<?php endif; ?>
+				<?php if ( $annefpugh_address ) : ?>
+					<address><?php echo nl2br( esc_html( $annefpugh_address ) ); ?></address>
+				<?php endif; ?>
+				<ul class="footer-contact">
+					<?php if ( $annefpugh_phone ) : ?>
+						<li><a href="<?php echo esc_attr( annefpugh_tel_href( $annefpugh_phone ) ); ?>"><?php echo esc_html( $annefpugh_phone ); ?></a></li>
+					<?php endif; ?>
+					<?php if ( is_email( $annefpugh_email ) ) : ?>
+						<li><a href="mailto:<?php echo esc_attr( antispambot( $annefpugh_email ) ); ?>"><?php echo esc_html( antispambot( $annefpugh_email ) ); ?></a></li>
+					<?php endif; ?>
+				</ul>
+			</section>
 
-		<p class="site-contact-line">
-			<?php
-			$phone  = get_theme_mod( 'annefpugh_phone' );
-			$email  = get_theme_mod( 'annefpugh_email' );
-			$pt_url = get_theme_mod( 'annefpugh_psychology_today_url' );
-			if ( $phone ) {
-				echo '<span class="phone">' . esc_html( $phone ) . '</span>';
-			}
-			if ( $email ) {
-				echo ' <a href="mailto:' . esc_attr( antispambot( $email ) ) . '">' . esc_html( antispambot( $email ) ) . '</a>';
-			}
-			if ( $pt_url ) {
-				echo ' <a href="' . esc_url( $pt_url ) . '" rel="noopener">' . esc_html__( 'Psychology Today', 'annefpugh' ) . '</a>';
-			}
-			?>
-		</p>
-	</div>
+			<?php if ( has_nav_menu( 'footer' ) ) : ?>
+				<nav class="footer-col" aria-labelledby="footer-links-heading">
+					<h2 id="footer-links-heading" class="footer-heading"><?php esc_html_e( 'Quick links', 'annefpugh' ); ?></h2>
+					<?php
+					wp_nav_menu(
+						array(
+							'theme_location' => 'footer',
+							'container'      => false,
+							'menu_class'     => 'footer-menu',
+							'depth'          => 1,
+						)
+					);
+					?>
+				</nav>
+			<?php endif; ?>
 
-	<div class="footer-bottom">
-		<p class="site-copyright">
-			&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>
-		</p>
-		<nav class="footer-nav-legal" aria-label="<?php esc_attr_e( 'Legal', 'annefpugh' ); ?>">
-			<?php
-			wp_nav_menu(
-				array(
-					'theme_location' => 'legal',
-					'container'      => false,
-					'fallback_cb'    => false,
-				)
-			);
-			?>
-		</nav>
+			<nav class="footer-col" aria-labelledby="footer-legal-heading">
+				<h2 id="footer-legal-heading" class="footer-heading"><?php esc_html_e( 'Policies', 'annefpugh' ); ?></h2>
+				<?php
+				if ( has_nav_menu( 'legal' ) ) {
+					wp_nav_menu(
+						array(
+							'theme_location' => 'legal',
+							'container'      => false,
+							'menu_class'     => 'footer-menu',
+							'depth'          => 1,
+						)
+					);
+				} elseif ( get_privacy_policy_url() ) {
+					echo '<ul class="footer-menu"><li>' . get_the_privacy_policy_link() . '</li></ul>'; // phpcs:ignore WordPress.Security.EscapeOutput -- core returns escaped markup.
+				}
+				?>
+			</nav>
+		</div>
+
+		<div class="footer-bottom">
+			<p>&copy; <?php echo esc_html( wp_date( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?></p>
+			<?php if ( $annefpugh_license ) : ?>
+				<p><?php echo esc_html( $annefpugh_license ); ?></p>
+			<?php endif; ?>
+		</div>
 	</div>
 </footer>
 

@@ -1,84 +1,92 @@
-# Anne Pugh Therapy
+# Single Provider Therapy — WordPress theme
 
-Custom WordPress theme for Anne Pugh, LCSW — a single-proprietor therapy practice in Berkeley/San Francisco. No blog — a small, focused sitemap plus legal pages, built to be warm, mobile-first, WCAG-minded, and locally searchable for the Bay Area.
+A warm, accessible WordPress theme for a single-provider therapy practice. You set everything from the dashboard: colors, images, practice details, and services. No code changes needed.
 
-## Sitemap (5 pages + legal)
+## Site structure (5 pages + legal)
 
-- **Home** — fully static, no post loop: splash image + hero card, therapist photo + intro, 3 featured services with descriptions, practice-at-a-glance qualifications, contact CTA
-- **About** — bio, credentials (LCSW), approach/modalities, populations served
-- **Services** — chronic illness; pregnancy, prenatal & postpartum; grief; anxiety; burnout; depression; chronic pain; life transitions
-- **FAQ / Rates** — fees, insurance, what to expect, telehealth vs. in-person
-- **Contact** — form + phone
-- Privacy Policy, Cookie Policy, Terms of Service — any slug, default page template
+| Page | Template | Purpose |
+|---|---|---|
+| Home | `front-page.php` (automatic) | Hero, meet the therapist, services grid, practice details, closing call to action |
+| About | Default | Full bio, approach, credentials |
+| Services | **Services** | Intro text, then every service with its image, title, and full description |
+| Fees & FAQ | Default | Rates, insurance, what to expect |
+| Contact | **Contact** | Contact form + phone/email/office/hours |
+| Privacy Policy, Terms of Service, Cookie Policy, etc. | Default | Legal pages — linked from the footer |
 
-## Structure
+## File layout
 
-```
-style.css                        Theme header (name, version, text domain)
-functions.php                    Setup, asset enqueue, nav menus, comments disabled
-header.php / footer.php          Site-wide shell: skip link, mobile nav toggle, crisis notice + nav + legal links in footer
-front-page.php                   Home page: 100% template parts, no post loop, no dependency on Reading Settings
-page.php / index.php             Generic page template (About, FAQ, Services, legal pages)
+```text
+style.css                     Theme header
+functions.php                 Loads inc/*
+header.php / footer.php       Site shell (skip link, crisis bar, nav / crisis notice, practice info, links)
+front-page.php                Homepage (template parts only, no post loop)
+page.php / index.php / 404.php
 page-templates/
-  template-contact.php           Contact page with a native (no-plugin) form
+  template-services.php       "Services" page template
+  template-contact.php        "Contact" page template
 inc/
-  contact-form.php               Form handler: nonce, honeypot, sanitized/validated input, wp_mail()
-  customizer.php                 Customizer "Practice Info" + "Homepage Images" panels
-  seo.php                        Meta description, Open Graph tags, canonical link, MedicalBusiness JSON-LD
+  template-functions.php      Defaults, annefpugh_mod(), contrast helpers, image helper
+  setup.php                   Theme supports, image sizes, menus, assets, comments disabled
+  post-types.php              "Service" post type
+  customizer.php              Customizer settings (design, homepage wording, page links)
+  admin-practice-info.php     "Practice Info" admin screen, Dashboard box, toolbar link
+  custom-css.php              Customizer colors → CSS custom properties
+  contact-form.php            Form handler (nonce, honeypot, sanitized input, wp_mail)
+  schema.php                  MedicalBusiness JSON-LD (skipped if an SEO plugin is active)
 template-parts/
-  hero-splash.php                Large splash image/gradient + overlaid hero card (name, tagline, CTA)
-  therapist-intro.php            Therapist photo (or placeholder) + short intro, links to About
-  services.php                   3 featured services, each with a real description, + "also treats" list, links to `services`
-  qualifications.php             License, format, languages, insurance — "practice at a glance"
-  cta.php                        Contact button + click-to-call, links to the page with slug `contact`
-css/main.css                     All styles
-js/main.js                       Mobile nav toggle only
+  crisis-bar.php              Optional 988/911 bar above the header
+  crisis-notice.php           Permanent crisis notice in the footer
+  home/                       hero, about, services, practice-info, cta
+  content/                    page, service-card, none
+assets/css/main.css           All styles
+assets/js/navigation.js       Mobile menu toggle
 ```
 
 ## Setup
 
-1. Install as a theme in `wp-content/themes/annefpugh/` (or symlink this directory there).
-2. Activate the theme.
-3. Create these pages, matching the slugs — the home page template looks them up by slug:
-   - `services`
-   - `contact` (assign the **Contact Form** page template)
-   - `about`
-   - FAQ / rates page (any slug)
-   - Privacy Policy, Cookie Policy, Terms of Service (any slugs — use the default page template)
-4. Set the site's front page to a page using the front page template (Settings → Reading), or create a page titled "Home" and set it as the static front page.
-5. Under Appearance → Customize → Practice Info, set:
-   - Phone, Contact Email, Office Address, Office Hours
-   - Service Area (shown in the hero — defaults to a Berkeley/SF/East Bay line)
-   - Homepage Meta Description (SEO, ~155 characters)
-   - Psychology Today Profile URL (surfaced in the footer and in the JSON-LD `sameAs`)
-6. Under Appearance → Customize → Homepage Images, set:
-   - Splash Image + alt text (large image at the top of the homepage — falls back to a sky/hills gradient if left empty)
-   - Therapist Photo + alt text (shows a placeholder silhouette if left empty)
-7. Under Appearance → Menus, assign:
-   - **Primary** — main site nav (Home, About, Services, FAQ, Contact)
-   - **Footer Menu** (optional) — same pages, repeated in the footer
-   - **Footer Legal Menu** — Privacy Policy, Terms of Service, Cookie Policy (shown in the footer's bottom bar)
-8. Optional but recommended: Settings → Reading → set "Your homepage displays" to a static page and pick Home. Not required for the homepage to render (`front-page.php` always wins at the site root regardless of this setting), but it makes `is_home()`/body classes report correctly since there's no blog on this site.
+1. Activate the theme.
+2. **Create the pages:** Home, About, Services (template: *Services*), Fees & FAQ, Contact (template: *Contact*), plus your legal pages.
+3. **Settings → Reading:** set "Your homepage displays" to *A static page* → Home.
+4. **Services** (left admin menu): add one entry per service:
+   - *Title* is the service name.
+   - *Featured image* is the service image.
+   - *Excerpt* is the short summary on the homepage card.
+   - *Content* is the full description on the Services page.
+   - *Order* (under Page Attributes) sets the display order.
+5. **Practice Info** (left admin menu, just below Dashboard): name, credentials, photo and its description, introduction, phone, email, address, map link, session format, hours, fees, insurance, and license. Each field has an example and a line of help text. The same screen is linked from the "Edit Practice Info" item in the admin toolbar on the live site, and from the "Update your website" box on the Dashboard.
+6. **Appearance → Customize** (design and homepage wording):
+   - *Site Identity*: site title, logo, site icon
+   - *Colors*: background color plus 7 theme colors and the hero overlay strength
+   - *Background Image*: optional site-wide background image
+   - *Practice Theme Options →* Hero, Homepage Sections, Crisis & Safety, Page Links
+   - Under *Page Links*, choose your About, Services, and Contact pages. The buttons and links throughout the site use these.
+7. **Appearance → Menus:** assign *Primary Menu*, *Footer Quick Links*, and *Footer Legal Links*. The legal menu falls back to your designated Privacy Policy page if left empty.
 
-## SEO & local search
+## Editable images
 
-- `inc/seo.php` outputs a meta description, Open Graph tags, a canonical link, and `MedicalBusiness` JSON-LD structured data (name, phone, email, address, hours, `areaServed`: Berkeley/San Francisco/Bay Area, and `sameAs` the Psychology Today profile) — fill in the Customizer fields above so this data is complete.
-- WordPress core ships an XML sitemap by default (`/wp-sitemap.xml`); no plugin needed.
-- Keep page titles and the meta description specific (city names, specialties) rather than generic — that's what drives local search matches.
+| Image | Where to change it |
+|---|---|
+| Logo | Customize → Site Identity |
+| Site background | Customize → Background Image |
+| Homepage hero | Customize → Practice Theme Options → Homepage: Hero |
+| Therapist photo (and its description) | Practice Info |
+| Service images | Services → edit service → Featured image |
+| Interior page banners | Edit page → Featured image (shown behind the page title) |
 
-## Accessibility (WCAG)
+## Accessibility
 
-- Skip-to-content link, landmark `<main>`, and a keyboard-operable mobile nav toggle (`aria-expanded`, closes on Escape).
-- Visible focus outlines on all interactive elements.
-- Text and button colors were checked for 4.5:1+ contrast against the background.
-- Minimum 44px touch targets on buttons and the nav toggle.
-- Add descriptive `alt` text to all uploaded images (logo, headshots) — the theme doesn't set this for you.
+- Skip link, landmark regions, one `h1` per page, labelled `nav`/`section` regions.
+- Keyboard-operable mobile menu (`aria-expanded`, Escape closes it and returns focus to the toggle).
+- Visible focus outlines everywhere; touch targets of at least 44px.
+- **Automatic contrast:** the theme calculates button text, footer text, and hero text as white or near-black from the colors you pick, so they stay WCAG-legible. Body text and heading colors are yours to choose — keep them dark enough (4.5:1) against your background.
+- Keep the hero overlay at 40% or higher when using a photo.
+- `prefers-reduced-motion` is respected.
+- Form fields have visible labels, `autocomplete` hints, and required-field markers; status messages are announced.
 
-## Footer & crisis resources
+## Safety & privacy
 
-The footer always shows a 988/911 crisis notice ("this website and email are not monitored for emergencies") — this isn't optional or tied to any Customizer setting, since it's standard practice for a mental health practice's site and shouldn't depend on setup being finished. Below that: site navigation (Footer Menu), contact info/NAP, and a bottom bar with copyright + legal links (Footer Legal Menu). Set up the Privacy Policy, Terms of Service, and Cookie Policy pages and assign them to the Footer Legal Menu location.
-
-## Notes
-
-- No blog: comments are disabled site-wide, there's no post archive/single template, and the homepage doesn't use the post loop at all.
-- The contact form posts to `admin-post.php` and sends via `wp_mail()` to the Customizer's contact email, falling back to the site admin email.
+- The footer on every page shows a crisis notice: 988 (Suicide & Crisis Lifeline), 911, and Crisis Text Line (text HOME to 741741), plus a note that the site isn't monitored for emergencies. It can't be turned off.
+- An optional slim 988/911 bar can be shown above the header (on by default).
+- The contact form asks visitors not to send sensitive health details. It sends via `wp_mail()` and stores nothing in the database. It's not a HIPAA-compliant intake — use a proper client portal for that.
+- No external fonts or scripts are loaded, so visitors' data isn't sent to third parties.
+- Comments are disabled site-wide.

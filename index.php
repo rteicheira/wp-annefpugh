@@ -1,25 +1,17 @@
 <?php
 /**
- * Fallback template — required by WordPress. This site has no blog,
- * so this only renders if something falls through page.php/front-page.php.
+ * Fallback template (required by WordPress). This site has no blog.
  */
 
 get_header();
-?>
 
-<article <?php post_class( 'page-content' ); ?>>
-	<?php
+if ( have_posts() ) :
 	while ( have_posts() ) :
 		the_post();
-		?>
-		<h1 class="page-title"><?php the_title(); ?></h1>
-		<div class="page-body">
-			<?php the_content(); ?>
-		</div>
-		<?php
+		get_template_part( 'template-parts/content/page' );
 	endwhile;
-	?>
-</article>
+else :
+	get_template_part( 'template-parts/content/none' );
+endif;
 
-<?php
 get_footer();

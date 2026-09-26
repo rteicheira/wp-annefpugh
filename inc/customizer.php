@@ -1,146 +1,151 @@
 <?php
 /**
- * Customizer settings for practice contact info.
+ * Customizer: colors, images, practice details, homepage copy, page links.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-function annefpugh_customize_register( WP_Customize_Manager $wp_customize ) {
-	$wp_customize->add_section(
-		'annefpugh_practice_info',
+function annefpugh_sanitize_checkbox( $value ) {
+	return (bool) $value;
+}
+
+function annefpugh_sanitize_opacity( $value ) {
+	return max( 0, min( 90, absint( $value ) ) );
+}
+
+function annefpugh_sanitize_services_count( $value ) {
+	return max( 1, min( 12, absint( $value ) ) );
+}
+
+/**
+ * Register one setting + control. $control_args['type'] selects the
+ * control: color, media, dropdown-pages, or any core input type.
+ */
+function annefpugh_add_field( WP_Customize_Manager $wp_customize, $id, $section, $sanitize, $control_args ) {
+	$defaults = annefpugh_defaults();
+
+	$wp_customize->add_setting(
+		$id,
 		array(
-			'title'    => __( 'Practice Info', 'annefpugh' ),
-			'priority' => 30,
+			'default'           => isset( $defaults[ $id ] ) ? $defaults[ $id ] : '',
+			'sanitize_callback' => $sanitize,
 		)
 	);
 
-	$fields = array(
-		'annefpugh_phone'   => array(
-			'label'             => __( 'Phone', 'annefpugh' ),
-			'sanitize_callback' => 'sanitize_text_field',
-		),
-		'annefpugh_email'   => array(
-			'label'             => __( 'Contact Email', 'annefpugh' ),
-			'sanitize_callback' => 'sanitize_email',
-		),
-		'annefpugh_address' => array(
-			'label'             => __( 'Office Address', 'annefpugh' ),
-			'sanitize_callback' => 'sanitize_text_field',
-		),
-		'annefpugh_hours'   => array(
-			'label'             => __( 'Office Hours', 'annefpugh' ),
-			'sanitize_callback' => 'sanitize_text_field',
-		),
-		'annefpugh_service_area' => array(
-			'label'             => __( 'Service Area (shown in hero)', 'annefpugh' ),
-			'sanitize_callback' => 'sanitize_text_field',
-			'default'           => __( 'Now seeing clients in Berkeley, San Francisco & the East Bay — in person and via telehealth.', 'annefpugh' ),
-		),
-		'annefpugh_meta_description' => array(
-			'label'             => __( 'Homepage Meta Description (SEO, ~155 characters)', 'annefpugh' ),
-			'sanitize_callback' => 'sanitize_text_field',
-		),
-		'annefpugh_psychology_today_url' => array(
-			'label'             => __( 'Psychology Today Profile URL', 'annefpugh' ),
-			'sanitize_callback' => 'esc_url_raw',
-		),
+	$control_args['section'] = $section;
+	$type                    = isset( $control_args['type'] ) ? $control_args['type'] : 'text';
+
+	if ( 'color' === $type ) {
+		unset( $control_args['type'] );
+		$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $id, $control_args ) );
+	} elseif ( 'media' === $type ) {
+		unset( $control_args['type'] );
+		$control_args['mime_type'] = 'image';
+		$wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, $id, $control_args ) );
+	} else {
+		$wp_customize->add_control( $id, $control_args );
+	}
+}
+
+function annefpugh_customize_register( WP_Customize_Manager $wp_customize ) {
+	$wp_customize->add_panel(
+		'annefpugh_options',
+		array(
+			'title'       => __( 'Practice Theme Options', 'annefpugh' ),
+			'description' => __( 'Your name, photo, phone, address, fees, and license are edited under "Practice Info" in the dashboard menu.', 'annefpugh' ),
+			'priority'    => 25,
+		)
 	);
 
-	foreach ( $fields as $id => $field ) {
-		$wp_customize->add_setting(
+	$sections = array(
+		'annefpugh_hero'      => __( 'Homepage: Hero', 'annefpugh' ),
+		'annefpugh_homepage'  => __( 'Homepage: Sections', 'annefpugh' ),
+		'annefpugh_safety'    => __( 'Crisis & Safety', 'annefpugh' ),
+		'annefpugh_pages'     => __( 'Page Links', 'annefpugh' ),
+	);
+	foreach ( $sections as $id => $title ) {
+		$wp_customize->add_section( $id, array( 'title' => $title, 'panel' => 'annefpugh_options' ) );
+	}
+
+	// Colors: core "Colors" section (it already holds the background color).
+	$contrast_note = __( 'Button and footer text colors are chosen automatically for readable contrast.', 'annefpugh' );
+	$colors        = array(
+		'color_primary'      => array( __( 'Primary (buttons, links)', 'annefpugh' ), $contrast_note ),
+		'color_secondary'    => array( __( 'Secondary accent', 'annefpugh' ), '' ),
+		'color_text'         => array( __( 'Body text', 'annefpugh' ), __( 'Keep this dark against your background for accessibility (4.5:1 contrast).', 'annefpugh' ) ),
+		'color_heading'      => array( __( 'Headings', 'annefpugh' ), '' ),
+		'color_surface'      => array( __( 'Alternate section background', 'annefpugh' ), '' ),
+		'color_footer_bg'    => array( __( 'Footer background', 'annefpugh' ), $contrast_note ),
+		'hero_overlay_color' => array( __( 'Hero image overlay', 'annefpugh' ), '' ),
+	);
+	foreach ( $colors as $id => $labels ) {
+		annefpugh_add_field(
+			$wp_customize,
 			$id,
+			'colors',
+			'sanitize_hex_color',
 			array(
-				'default'           => isset( $field['default'] ) ? $field['default'] : '',
-				'sanitize_callback' => $field['sanitize_callback'],
-			)
-		);
-		$wp_customize->add_control(
-			$id,
-			array(
-				'section' => 'annefpugh_practice_info',
-				'label'   => $field['label'],
-				'type'    => 'text',
+				'type'        => 'color',
+				'label'       => $labels[0],
+				'description' => $labels[1],
 			)
 		);
 	}
-
-	// Homepage images.
-	$wp_customize->add_section(
-		'annefpugh_homepage_images',
+	annefpugh_add_field(
+		$wp_customize,
+		'hero_overlay_opacity',
+		'colors',
+		'annefpugh_sanitize_opacity',
 		array(
-			'title'    => __( 'Homepage Images', 'annefpugh' ),
-			'priority' => 31,
-		)
-	);
-
-	$wp_customize->add_setting(
-		'annefpugh_hero_image',
-		array(
-			'default'           => '',
-			'sanitize_callback' => 'esc_url_raw',
-		)
-	);
-	$wp_customize->add_control(
-		new WP_Customize_Image_Control(
-			$wp_customize,
-			'annefpugh_hero_image',
-			array(
-				'section'     => 'annefpugh_homepage_images',
-				'label'       => __( 'Splash Image (large, top of homepage)', 'annefpugh' ),
-				'description' => __( 'A wide, bright California landscape or office photo works well here. Falls back to a plain color if left empty.', 'annefpugh' ),
-			)
-		)
-	);
-	$wp_customize->add_setting(
-		'annefpugh_hero_image_alt',
-		array(
-			'default'           => '',
-			'sanitize_callback' => 'sanitize_text_field',
-		)
-	);
-	$wp_customize->add_control(
-		'annefpugh_hero_image_alt',
-		array(
-			'section' => 'annefpugh_homepage_images',
-			'label'   => __( 'Splash Image alt text (for screen readers)', 'annefpugh' ),
-			'type'    => 'text',
+			'type'        => 'range',
+			'label'       => __( 'Hero overlay strength (%)', 'annefpugh' ),
+			'description' => __( 'Darkens the hero image so the heading stays readable. 40% or more is recommended.', 'annefpugh' ),
+			'input_attrs' => array(
+				'min'  => 0,
+				'max'  => 90,
+				'step' => 5,
+			),
 		)
 	);
 
-	$wp_customize->add_setting(
-		'annefpugh_therapist_photo',
+	// Hero.
+	annefpugh_add_field( $wp_customize, 'hero_image', 'annefpugh_hero', 'absint', array( 'type' => 'media', 'label' => __( 'Hero image', 'annefpugh' ), 'description' => __( 'Wide landscape photo, at least 1920×1080. Leave empty for a solid color.', 'annefpugh' ) ) );
+	annefpugh_add_field( $wp_customize, 'hero_heading', 'annefpugh_hero', 'sanitize_text_field', array( 'label' => __( 'Heading', 'annefpugh' ) ) );
+	annefpugh_add_field( $wp_customize, 'hero_subheading', 'annefpugh_hero', 'sanitize_textarea_field', array( 'type' => 'textarea', 'label' => __( 'Subheading', 'annefpugh' ) ) );
+	annefpugh_add_field( $wp_customize, 'hero_button_text', 'annefpugh_hero', 'sanitize_text_field', array( 'label' => __( 'Button text (links to Contact page)', 'annefpugh' ) ) );
+
+	// Therapist and practice details live on the Practice Info admin screen (inc/admin-practice-info.php).
+
+	// Homepage sections.
+	annefpugh_add_field( $wp_customize, 'services_heading', 'annefpugh_homepage', 'sanitize_text_field', array( 'label' => __( 'Services heading', 'annefpugh' ) ) );
+	annefpugh_add_field( $wp_customize, 'services_intro', 'annefpugh_homepage', 'sanitize_textarea_field', array( 'type' => 'textarea', 'label' => __( 'Services introduction', 'annefpugh' ) ) );
+	annefpugh_add_field( $wp_customize, 'services_count', 'annefpugh_homepage', 'annefpugh_sanitize_services_count', array( 'type' => 'number', 'label' => __( 'Number of services on the homepage', 'annefpugh' ), 'input_attrs' => array( 'min' => 1, 'max' => 12 ) ) );
+	annefpugh_add_field( $wp_customize, 'cta_heading', 'annefpugh_homepage', 'sanitize_text_field', array( 'label' => __( 'Closing call-to-action heading', 'annefpugh' ) ) );
+	annefpugh_add_field( $wp_customize, 'cta_text', 'annefpugh_homepage', 'sanitize_textarea_field', array( 'type' => 'textarea', 'label' => __( 'Closing call-to-action text', 'annefpugh' ) ) );
+
+	// Crisis & safety.
+	annefpugh_add_field(
+		$wp_customize,
+		'show_crisis_bar',
+		'annefpugh_safety',
+		'annefpugh_sanitize_checkbox',
 		array(
-			'default'           => '',
-			'sanitize_callback' => 'esc_url_raw',
+			'type'        => 'checkbox',
+			'label'       => __( 'Show the 988/911 crisis bar at the top of every page', 'annefpugh' ),
+			'description' => __( 'The crisis notice in the footer is always shown and can\'t be turned off.', 'annefpugh' ),
 		)
 	);
-	$wp_customize->add_control(
-		new WP_Customize_Image_Control(
-			$wp_customize,
-			'annefpugh_therapist_photo',
-			array(
-				'section'     => 'annefpugh_homepage_images',
-				'label'       => __( 'Therapist Photo', 'annefpugh' ),
-				'description' => __( 'A warm, approachable headshot. Shows a placeholder until one is added.', 'annefpugh' ),
-			)
-		)
+
+	// Page links.
+	$page_links = array(
+		'page_about'    => __( 'About page', 'annefpugh' ),
+		'page_services' => __( 'Services page', 'annefpugh' ),
+		'page_contact'  => __( 'Contact page', 'annefpugh' ),
 	);
-	$wp_customize->add_setting(
-		'annefpugh_therapist_photo_alt',
-		array(
-			'default'           => '',
-			'sanitize_callback' => 'sanitize_text_field',
-		)
-	);
-	$wp_customize->add_control(
-		'annefpugh_therapist_photo_alt',
-		array(
-			'section' => 'annefpugh_homepage_images',
-			'label'   => __( 'Therapist Photo alt text (for screen readers)', 'annefpugh' ),
-			'type'    => 'text',
-		)
-	);
+	foreach ( $page_links as $id => $label ) {
+		annefpugh_add_field( $wp_customize, $id, 'annefpugh_pages', 'absint', array( 'type' => 'dropdown-pages', 'label' => $label ) );
+	}
 }
 add_action( 'customize_register', 'annefpugh_customize_register' );

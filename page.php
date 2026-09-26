@@ -1,25 +1,13 @@
 <?php
 /**
- * Generic page template — used for About, Services, and the legal
- * pages (Privacy Policy, Cookie Policy, Terms of Service).
+ * Default page template — About, Fees & FAQ, and legal pages.
  */
 
 get_header();
-?>
 
-<article <?php post_class( 'page-content' ); ?>>
-	<?php
-	while ( have_posts() ) :
-		the_post();
-		?>
-		<h1 class="page-title"><?php the_title(); ?></h1>
-		<div class="page-body">
-			<?php the_content(); ?>
-		</div>
-		<?php
-	endwhile;
-	?>
-</article>
+while ( have_posts() ) :
+	the_post();
+	get_template_part( 'template-parts/content/page' );
+endwhile;
 
-<?php
 get_footer();
