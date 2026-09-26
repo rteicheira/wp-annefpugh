@@ -65,5 +65,82 @@ function annefpugh_customize_register( WP_Customize_Manager $wp_customize ) {
 			)
 		);
 	}
+
+	// Homepage images.
+	$wp_customize->add_section(
+		'annefpugh_homepage_images',
+		array(
+			'title'    => __( 'Homepage Images', 'annefpugh' ),
+			'priority' => 31,
+		)
+	);
+
+	$wp_customize->add_setting(
+		'annefpugh_hero_image',
+		array(
+			'default'           => '',
+			'sanitize_callback' => 'esc_url_raw',
+		)
+	);
+	$wp_customize->add_control(
+		new WP_Customize_Image_Control(
+			$wp_customize,
+			'annefpugh_hero_image',
+			array(
+				'section'     => 'annefpugh_homepage_images',
+				'label'       => __( 'Splash Image (large, top of homepage)', 'annefpugh' ),
+				'description' => __( 'A wide, bright California landscape or office photo works well here. Falls back to a plain color if left empty.', 'annefpugh' ),
+			)
+		)
+	);
+	$wp_customize->add_setting(
+		'annefpugh_hero_image_alt',
+		array(
+			'default'           => '',
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'annefpugh_hero_image_alt',
+		array(
+			'section' => 'annefpugh_homepage_images',
+			'label'   => __( 'Splash Image alt text (for screen readers)', 'annefpugh' ),
+			'type'    => 'text',
+		)
+	);
+
+	$wp_customize->add_setting(
+		'annefpugh_therapist_photo',
+		array(
+			'default'           => '',
+			'sanitize_callback' => 'esc_url_raw',
+		)
+	);
+	$wp_customize->add_control(
+		new WP_Customize_Image_Control(
+			$wp_customize,
+			'annefpugh_therapist_photo',
+			array(
+				'section'     => 'annefpugh_homepage_images',
+				'label'       => __( 'Therapist Photo', 'annefpugh' ),
+				'description' => __( 'A warm, approachable headshot. Shows a placeholder until one is added.', 'annefpugh' ),
+			)
+		)
+	);
+	$wp_customize->add_setting(
+		'annefpugh_therapist_photo_alt',
+		array(
+			'default'           => '',
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'annefpugh_therapist_photo_alt',
+		array(
+			'section' => 'annefpugh_homepage_images',
+			'label'   => __( 'Therapist Photo alt text (for screen readers)', 'annefpugh' ),
+			'type'    => 'text',
+		)
+	);
 }
 add_action( 'customize_register', 'annefpugh_customize_register' );

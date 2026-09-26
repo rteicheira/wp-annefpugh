@@ -2,25 +2,18 @@
 /**
  * Home page.
  *
- * Editable via the block editor — sections below wrap whatever content
- * is entered for the front page, plus a services teaser and CTA.
+ * Fully static — built entirely from template parts, no post loop.
+ * This site has no blog, so the homepage never depends on the main
+ * query or Reading Settings.
  */
 
 get_header();
 ?>
 
-<?php get_template_part( 'template-parts/hero' ); ?>
-
-<div class="front-page-content">
-	<?php
-	while ( have_posts() ) :
-		the_post();
-		the_content();
-	endwhile;
-	?>
-</div>
-
-<?php get_template_part( 'template-parts/services-teaser' ); ?>
+<?php get_template_part( 'template-parts/hero-splash' ); ?>
+<?php get_template_part( 'template-parts/therapist-intro' ); ?>
+<?php get_template_part( 'template-parts/services' ); ?>
+<?php get_template_part( 'template-parts/qualifications' ); ?>
 <?php get_template_part( 'template-parts/cta' ); ?>
 
 <?php

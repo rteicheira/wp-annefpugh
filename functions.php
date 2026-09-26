@@ -22,6 +22,7 @@ function annefpugh_setup() {
 		array(
 			'primary' => __( 'Primary Menu', 'annefpugh' ),
 			'footer'  => __( 'Footer Menu', 'annefpugh' ),
+			'legal'   => __( 'Footer Legal Menu (Privacy Policy, Terms of Service, etc.)', 'annefpugh' ),
 		)
 	);
 }
