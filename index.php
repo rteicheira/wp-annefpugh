@@ -3,6 +3,8 @@
  * Fallback template (required by WordPress). This site has no blog.
  */
 
+defined( 'ABSPATH' ) || exit;
+
 get_header();
 
 if ( have_posts() ) :

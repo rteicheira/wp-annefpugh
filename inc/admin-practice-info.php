@@ -164,8 +164,8 @@ function annefpugh_practice_admin_assets( $hook ) {
 	}
 	wp_enqueue_media();
 	$uri = get_template_directory_uri();
-	wp_enqueue_style( 'annefpugh-admin', $uri . '/assets/css/admin.css', array(), ANNEFPUGH_VERSION );
-	wp_enqueue_script( 'annefpugh-admin-practice-info', $uri . '/assets/js/admin-practice-info.js', array( 'jquery' ), ANNEFPUGH_VERSION, true );
+	wp_enqueue_style( 'annefpugh-admin', $uri . '/assets/css/admin.css', array(), annefpugh_asset_version( 'assets/css/admin.css' ) );
+	wp_enqueue_script( 'annefpugh-admin-practice-info', $uri . '/assets/js/admin-practice-info.js', array( 'jquery' ), annefpugh_asset_version( 'assets/js/admin-practice-info.js' ), true );
 }
 add_action( 'admin_enqueue_scripts', 'annefpugh_practice_admin_assets' );
 
@@ -179,7 +179,8 @@ function annefpugh_save_practice_info() {
 
 	foreach ( annefpugh_practice_field_groups() as $group ) {
 		foreach ( $group['fields'] as $key => $field ) {
-			$raw   = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- sanitized below per field type.
+			// Strings only: anything else (e.g. key[]=…) is treated as empty.
+			$raw   = isset( $_POST[ $key ] ) && is_string( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- sanitized below per field type.
 			$clean = annefpugh_practice_sanitize( $field['type'], $raw );
 
 			if ( 'email' === $field['type'] && '' !== trim( $raw ) && ! is_email( $clean ) ) {
@@ -197,7 +198,7 @@ function annefpugh_save_practice_info() {
 
 	// Photo alt text lives on the image itself, so it's reused wherever the photo appears.
 	$photo_id = absint( get_theme_mod( 'therapist_photo' ) );
-	if ( $photo_id && isset( $_POST['therapist_photo_alt'] ) ) {
+	if ( $photo_id && isset( $_POST['therapist_photo_alt'] ) && is_string( $_POST['therapist_photo_alt'] ) ) {
 		update_post_meta( $photo_id, '_wp_attachment_image_alt', sanitize_text_field( wp_unslash( $_POST['therapist_photo_alt'] ) ) );
 	}
 
@@ -395,7 +396,7 @@ add_action( 'wp_dashboard_setup', 'annefpugh_dashboard_widget' );
 
 function annefpugh_dashboard_widget_styles( $hook ) {
 	if ( 'index.php' === $hook ) {
-		wp_enqueue_style( 'annefpugh-admin', get_template_directory_uri() . '/assets/css/admin.css', array(), ANNEFPUGH_VERSION );
+		wp_enqueue_style( 'annefpugh-admin', get_template_directory_uri() . '/assets/css/admin.css', array(), annefpugh_asset_version( 'assets/css/admin.css' ) );
 	}
 }
 add_action( 'admin_enqueue_scripts', 'annefpugh_dashboard_widget_styles' );

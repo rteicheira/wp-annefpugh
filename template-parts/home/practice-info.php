@@ -4,6 +4,8 @@
  * a three-column grid. Each block only shows once it has content.
  */
 
+defined( 'ABSPATH' ) || exit;
+
 $annefpugh_address   = annefpugh_mod( 'address' );
 $annefpugh_map_url   = annefpugh_mod( 'map_url' );
 $annefpugh_format    = annefpugh_mod( 'session_format' );

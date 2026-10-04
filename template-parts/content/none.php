@@ -2,6 +2,8 @@
 /**
  * Shown for 404s and empty results.
  */
+
+defined( 'ABSPATH' ) || exit;
 ?>
 <section class="page-article">
 	<header class="page-header">

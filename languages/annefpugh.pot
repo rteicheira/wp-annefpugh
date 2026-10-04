@@ -1,0 +1,1022 @@
+# Copyright (C) 2026 Russ Teicheira
+# This file is distributed under the GNU General Public License v3 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Single Provider Therapy 1.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/annefpugh\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-04T00:42:17+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: annefpugh\n"
+
+#. Theme Name of the theme
+#: style.css
+msgid "Single Provider Therapy"
+msgstr ""
+
+#. Description of the theme
+#: style.css
+msgid "Warm, accessible theme for a single-provider therapy practice. Up to five core pages (Home, About, Services, Fees & FAQ, Contact) plus legal pages. Colors, images, practice details, and services are all editable from the Customizer and dashboard. Includes 988/911 crisis information site-wide."
+msgstr ""
+
+#. Author of the theme
+#: style.css
+msgid "Russ Teicheira"
+msgstr ""
+
+#: footer.php:40
+msgid "Quick links"
+msgstr ""
+
+#: footer.php:56
+msgid "Policies"
+msgstr ""
+
+#: header.php:21
+msgid "Skip to main content"
+msgstr ""
+
+#: header.php:45
+msgid "Menu"
+msgstr ""
+
+#: header.php:48
+msgid "Main"
+msgstr ""
+
+#: header.php:61
+msgid "Get in touch"
+msgstr ""
+
+#: inc/admin-practice-info.php:22
+msgid "About you"
+msgstr ""
+
+#: inc/admin-practice-info.php:23
+msgid "How you appear on the homepage and in the footer."
+msgstr ""
+
+#: inc/admin-practice-info.php:26
+msgid "Your name"
+msgstr ""
+
+#: inc/admin-practice-info.php:28
+msgid "Jane Smith"
+msgstr ""
+
+#: inc/admin-practice-info.php:29
+msgid "As clients should see it. If left blank, the site title is used."
+msgstr ""
+
+#: inc/admin-practice-info.php:32
+msgid "Credentials"
+msgstr ""
+
+#: inc/admin-practice-info.php:34
+msgid "LCSW"
+msgstr ""
+
+#: inc/admin-practice-info.php:35
+msgid "The letters after your name."
+msgstr ""
+
+#: inc/admin-practice-info.php:38
+msgid "Your photo"
+msgstr ""
+
+#: inc/admin-practice-info.php:40
+msgid "A warm, friendly headshot. Portrait (taller than wide) photos look best."
+msgstr ""
+
+#: inc/admin-practice-info.php:43
+msgid "Short introduction"
+msgstr ""
+
+#: inc/admin-practice-info.php:46
+msgid "I help adults navigating…"
+msgstr ""
+
+#: inc/admin-practice-info.php:47
+msgid "A few welcoming sentences shown next to your photo on the homepage. Leave a blank line between paragraphs."
+msgstr ""
+
+#: inc/admin-practice-info.php:52
+msgid "How clients reach you"
+msgstr ""
+
+#: inc/admin-practice-info.php:53
+msgid "Shown in the header, homepage, contact page, and footer."
+msgstr ""
+
+#: inc/admin-practice-info.php:56
+msgid "Phone number"
+msgstr ""
+
+#: inc/admin-practice-info.php:58
+msgid "(555) 123-4567"
+msgstr ""
+
+#: inc/admin-practice-info.php:59
+msgid "Visitors on a phone can tap it to call."
+msgstr ""
+
+#: inc/admin-practice-info.php:62
+msgid "Email address"
+msgstr ""
+
+#: inc/admin-practice-info.php:64
+msgid "you@yourpractice.com"
+msgstr ""
+
+#: inc/admin-practice-info.php:65
+msgid "Contact form messages are sent here. It's also shown in the footer."
+msgstr ""
+
+#: inc/admin-practice-info.php:70
+#: template-parts/home/practice-info.php:33
+msgid "Location"
+msgstr ""
+
+#: inc/admin-practice-info.php:71
+msgid "Leave these blank if you only see clients by telehealth."
+msgstr ""
+
+#: inc/admin-practice-info.php:74
+msgid "Office address"
+msgstr ""
+
+#: inc/admin-practice-info.php:77
+msgid ""
+"123 Main Street, Suite 200\n"
+"Berkeley, CA 94707"
+msgstr ""
+
+#: inc/admin-practice-info.php:78
+msgid "Put each line of the address on its own line."
+msgstr ""
+
+#: inc/admin-practice-info.php:81
+msgid "Map link"
+msgstr ""
+
+#: inc/admin-practice-info.php:84
+msgid "Find your office in Google Maps, click \"Share\", then \"Copy link\", and paste it here. Adds a \"Get directions\" link."
+msgstr ""
+
+#: inc/admin-practice-info.php:89
+msgid "Sessions, fees & insurance"
+msgstr ""
+
+#: inc/admin-practice-info.php:90
+msgid "Shown in the \"Practice details\" section of the homepage."
+msgstr ""
+
+#: inc/admin-practice-info.php:93
+msgid "How you meet with clients"
+msgstr ""
+
+#: inc/admin-practice-info.php:95
+#: inc/template-functions.php:44
+msgid "In person and telehealth"
+msgstr ""
+
+#: inc/admin-practice-info.php:98
+#: page-templates/template-contact.php:50
+msgid "Hours"
+msgstr ""
+
+#: inc/admin-practice-info.php:101
+msgid ""
+"Monday–Thursday, 9am–6pm\n"
+"Friday by appointment"
+msgstr ""
+
+#: inc/admin-practice-info.php:104
+msgid "Fees"
+msgstr ""
+
+#: inc/admin-practice-info.php:107
+msgid "$200 per 50-minute session. Sliding scale available."
+msgstr ""
+
+#: inc/admin-practice-info.php:110
+msgid "Insurance"
+msgstr ""
+
+#: inc/admin-practice-info.php:113
+msgid "In-network with Aetna and Cigna. Superbills available for out-of-network reimbursement."
+msgstr ""
+
+#: inc/admin-practice-info.php:118
+msgid "License"
+msgstr ""
+
+#: inc/admin-practice-info.php:122
+msgid "License information"
+msgstr ""
+
+#: inc/admin-practice-info.php:124
+msgid "LCSW, California #12345"
+msgstr ""
+
+#: inc/admin-practice-info.php:125
+msgid "Shown in the footer on every page. Many state licensing boards require this on your website."
+msgstr ""
+
+#: inc/admin-practice-info.php:150
+#: inc/admin-practice-info.php:151
+#: inc/admin-practice-info.php:289
+#: inc/admin-practice-info.php:354
+msgid "Practice Info"
+msgstr ""
+
+#: inc/admin-practice-info.php:174
+msgid "You do not have permission to change practice information."
+msgstr ""
+
+#: inc/admin-practice-info.php:250
+msgid "Choose your photo"
+msgstr ""
+
+#: inc/admin-practice-info.php:250
+msgid "Use this photo"
+msgstr ""
+
+#: inc/admin-practice-info.php:251
+msgid "Change photo"
+msgstr ""
+
+#: inc/admin-practice-info.php:251
+msgid "Choose photo"
+msgstr ""
+
+#: inc/admin-practice-info.php:254
+msgid "Remove photo"
+msgstr ""
+
+#: inc/admin-practice-info.php:258
+msgid "Describe the photo"
+msgstr ""
+
+#: inc/admin-practice-info.php:259
+msgid "Jane Smith smiling in her office"
+msgstr ""
+
+#: inc/admin-practice-info.php:260
+msgid "Read aloud to visitors who use screen readers."
+msgstr ""
+
+#: inc/admin-practice-info.php:290
+msgid "Keep your details up to date here. Changes appear across your whole website as soon as you click \"Save changes\"."
+msgstr ""
+
+#: inc/admin-practice-info.php:295
+msgid "Your practice information was saved."
+msgstr ""
+
+#: inc/admin-practice-info.php:296
+#: inc/admin-service-order.php:66
+msgid "View your website"
+msgstr ""
+
+#: inc/admin-practice-info.php:296
+#: inc/admin-service-order.php:66
+msgid "(opens in a new tab)"
+msgstr ""
+
+#: inc/admin-practice-info.php:301
+msgid "That email address didn't look right, so the previous one was kept. Please check it and save again."
+msgstr ""
+
+#: inc/admin-practice-info.php:304
+msgid "The map link didn't look like a web address, so the previous one was kept. It should start with https://"
+msgstr ""
+
+#: inc/admin-practice-info.php:331
+msgid "Save changes"
+msgstr ""
+
+#: inc/admin-practice-info.php:337
+msgid "Other things you can update"
+msgstr ""
+
+#: inc/admin-practice-info.php:354
+msgid "Your name, photo, phone, address, fees, and license"
+msgstr ""
+
+#. Template Name of the theme
+#: inc/admin-practice-info.php:356
+#: inc/post-types.php:19
+#: page-templates/template-services.php:24
+msgid "Services"
+msgstr ""
+
+#: inc/admin-practice-info.php:356
+msgid "Add, edit, or reorder the services you offer"
+msgstr ""
+
+#: inc/admin-practice-info.php:357
+msgid "Pages"
+msgstr ""
+
+#: inc/admin-practice-info.php:357
+msgid "About, Fees & FAQ, Contact, and legal pages"
+msgstr ""
+
+#: inc/admin-practice-info.php:358
+msgid "Homepage, colors & images"
+msgstr ""
+
+#: inc/admin-practice-info.php:358
+msgid "Homepage headline and photo, colors, logo"
+msgstr ""
+
+#: inc/admin-practice-info.php:378
+msgid "Edit Practice Info"
+msgstr ""
+
+#: inc/admin-practice-info.php:388
+msgid "Update your website"
+msgstr ""
+
+#: inc/admin-practice-info.php:390
+msgid "Where to change things on your site:"
+msgstr ""
+
+#: inc/admin-service-order.php:17
+#: inc/admin-service-order.php:59
+msgid "Change Service Order"
+msgstr ""
+
+#: inc/admin-service-order.php:18
+msgid "Change Order"
+msgstr ""
+
+#: inc/admin-service-order.php:60
+msgid "Drag services into the order you want them to appear on your website, or use the Move up and Move down buttons. Then click \"Save order\"."
+msgstr ""
+
+#: inc/admin-service-order.php:65
+msgid "The new order was saved."
+msgstr ""
+
+#: inc/admin-service-order.php:73
+msgid "You haven't added any services yet."
+msgstr ""
+
+#: inc/admin-service-order.php:74
+msgid "Add your first service"
+msgstr ""
+
+#: inc/admin-service-order.php:83
+msgid "(no title)"
+msgstr ""
+
+#: inc/admin-service-order.php:86
+msgid "Drag to reorder"
+msgstr ""
+
+#. translators: %s: service title
+#: inc/admin-service-order.php:99
+#, php-format
+msgid "Move %s up"
+msgstr ""
+
+#. translators: %s: service title
+#: inc/admin-service-order.php:99
+msgid "Move up"
+msgstr ""
+
+#. translators: %s: service title
+#: inc/admin-service-order.php:101
+#, php-format
+msgid "Move %s down"
+msgstr ""
+
+#. translators: %s: service title
+#: inc/admin-service-order.php:101
+msgid "Move down"
+msgstr ""
+
+#: inc/admin-service-order.php:108
+msgid "Save order"
+msgstr ""
+
+#: inc/admin-service-order.php:118
+msgid "You do not have permission to reorder services."
+msgstr ""
+
+#: inc/admin-service-order.php:163
+msgid "Change order"
+msgstr ""
+
+#. translators: %s: site name
+#: inc/contact-form.php:142
+#, php-format
+msgid "Call-back request — %s"
+msgstr ""
+
+#. translators: %s: site name
+#: inc/contact-form.php:144
+#, php-format
+msgid "New consultation request — %s"
+msgstr ""
+
+#: inc/contact-form.php:146
+msgid "[Unverified] "
+msgstr ""
+
+#: inc/customizer.php:57
+msgid "Practice Theme Options"
+msgstr ""
+
+#: inc/customizer.php:58
+msgid "Your name, photo, phone, address, fees, and license are edited under \"Practice Info\" in the dashboard menu."
+msgstr ""
+
+#: inc/customizer.php:64
+msgid "Homepage: Hero"
+msgstr ""
+
+#: inc/customizer.php:65
+msgid "Homepage: Sections"
+msgstr ""
+
+#: inc/customizer.php:66
+msgid "Crisis & Safety"
+msgstr ""
+
+#: inc/customizer.php:67
+msgid "Page Links"
+msgstr ""
+
+#: inc/customizer.php:74
+msgid "Pick any colors you like. To keep the site readable for everyone (WCAG AA), text, links, and focus outlines are automatically darkened or lightened where needed so they always contrast with the background behind them."
+msgstr ""
+
+#: inc/customizer.php:77
+msgid "Primary (buttons, links)"
+msgstr ""
+
+#: inc/customizer.php:77
+msgid "Button text is set to white or black automatically. Links use a darker shade if this color is too light to read."
+msgstr ""
+
+#: inc/customizer.php:78
+msgid "Secondary accent"
+msgstr ""
+
+#: inc/customizer.php:79
+msgid "Body text"
+msgstr ""
+
+#: inc/customizer.php:80
+msgid "Headings"
+msgstr ""
+
+#: inc/customizer.php:81
+msgid "Alternate section background"
+msgstr ""
+
+#: inc/customizer.php:82
+msgid "Header background"
+msgstr ""
+
+#: inc/customizer.php:83
+msgid "Card and form background"
+msgstr ""
+
+#: inc/customizer.php:83
+msgid "Service cards and the call-back form."
+msgstr ""
+
+#: inc/customizer.php:84
+msgid "Footer and crisis bar background"
+msgstr ""
+
+#: inc/customizer.php:84
+msgid "Text color is set automatically."
+msgstr ""
+
+#: inc/customizer.php:85
+msgid "Hero image overlay"
+msgstr ""
+
+#: inc/customizer.php:107
+msgid "Hero overlay strength (%)"
+msgstr ""
+
+#: inc/customizer.php:108
+msgid "Darkens the hero image so the heading stays readable. 40% or more is recommended."
+msgstr ""
+
+#: inc/customizer.php:118
+msgid "Hero image"
+msgstr ""
+
+#: inc/customizer.php:118
+msgid "Wide landscape photo, at least 1920×1080. Leave empty for a solid color."
+msgstr ""
+
+#: inc/customizer.php:119
+msgid "Heading"
+msgstr ""
+
+#: inc/customizer.php:120
+msgid "Subheading"
+msgstr ""
+
+#: inc/customizer.php:121
+msgid "Button text (links to Contact page)"
+msgstr ""
+
+#: inc/customizer.php:126
+msgid "Services heading"
+msgstr ""
+
+#: inc/customizer.php:127
+msgid "Services introduction"
+msgstr ""
+
+#: inc/customizer.php:128
+msgid "Number of services on the homepage"
+msgstr ""
+
+#: inc/customizer.php:129
+msgid "Closing call-to-action heading"
+msgstr ""
+
+#: inc/customizer.php:130
+msgid "Closing call-to-action text"
+msgstr ""
+
+#: inc/customizer.php:140
+msgid "Show the crisis bar at the top of every page"
+msgstr ""
+
+#: inc/customizer.php:141
+msgid "The crisis notice in the footer is always shown and can't be turned off."
+msgstr ""
+
+#: inc/customizer.php:145
+msgid "Phone numbers you type here (like 988, 911, or (555) 123-4567) automatically become tap-to-call links. Text HOME to 741741 becomes a tap-to-text link. Any field left blank goes back to the standard wording, so crisis information can't disappear by accident."
+msgstr ""
+
+#: inc/customizer.php:148
+msgid "Crisis bar text (top of page)"
+msgstr ""
+
+#: inc/customizer.php:149
+msgid "Footer crisis heading"
+msgstr ""
+
+#: inc/customizer.php:150
+msgid "Footer crisis resources"
+msgstr ""
+
+#: inc/customizer.php:150
+msgid "One resource per line. Each line becomes a bullet point."
+msgstr ""
+
+#: inc/customizer.php:151
+msgid "Footer note"
+msgstr ""
+
+#: inc/customizer.php:151
+msgid "Shown below the resources."
+msgstr ""
+
+#: inc/customizer.php:152
+msgid "Contact form safety note"
+msgstr ""
+
+#: inc/customizer.php:152
+msgid "Shown above both forms: the Contact page form and the \"Request a call back\" form on the homepage and Services page."
+msgstr ""
+
+#: inc/customizer.php:170
+msgid "About page"
+msgstr ""
+
+#: inc/customizer.php:171
+msgid "Services page"
+msgstr ""
+
+#: inc/customizer.php:172
+msgid "Contact page"
+msgstr ""
+
+#: inc/post-types.php:20
+msgid "Service"
+msgstr ""
+
+#: inc/post-types.php:21
+msgid "Add New Service"
+msgstr ""
+
+#: inc/post-types.php:22
+msgid "Edit Service"
+msgstr ""
+
+#: inc/post-types.php:23
+msgid "New Service"
+msgstr ""
+
+#: inc/post-types.php:24
+msgid "All Services"
+msgstr ""
+
+#: inc/post-types.php:25
+msgid "No services yet."
+msgstr ""
+
+#: inc/post-types.php:26
+msgid "Service image"
+msgstr ""
+
+#: inc/post-types.php:27
+msgid "Set service image"
+msgstr ""
+
+#: inc/post-types.php:29
+msgid "Services offered by the practice. Excerpt = short summary on the homepage; content = full description on the Services page. Reorder under Services → Change Order."
+msgstr ""
+
+#: inc/recaptcha.php:69
+#: inc/recaptcha.php:70
+#: inc/recaptcha.php:86
+msgid "Spam Protection"
+msgstr ""
+
+#: inc/recaptcha.php:87
+msgid "Google reCAPTCHA helps stop automated spam from reaching your inbox through the contact forms. The forms already include a hidden spam trap; reCAPTCHA adds a stronger check."
+msgstr ""
+
+#: inc/recaptcha.php:90
+msgid "reCAPTCHA is turned on but isn't running yet — add both the site key and the secret key below."
+msgstr ""
+
+#: inc/recaptcha.php:97
+msgid "Status"
+msgstr ""
+
+#: inc/recaptcha.php:99
+msgid "Use reCAPTCHA on the contact forms"
+msgstr ""
+
+#: inc/recaptcha.php:103
+msgid "Type"
+msgstr ""
+
+#: inc/recaptcha.php:106
+msgid "reCAPTCHA type"
+msgstr ""
+
+#: inc/recaptcha.php:107
+msgid "v3 — invisible (recommended)"
+msgstr ""
+
+#: inc/recaptcha.php:108
+msgid "No puzzles or checkboxes for visitors, which is best for accessibility."
+msgstr ""
+
+#: inc/recaptcha.php:110
+msgid "v2 — \"I'm not a robot\" checkbox"
+msgstr ""
+
+#: inc/recaptcha.php:111
+msgid "Visitors tick a box and are sometimes shown image puzzles."
+msgstr ""
+
+#: inc/recaptcha.php:113
+msgid "Your keys must be created for the same type you choose here."
+msgstr ""
+
+#: inc/recaptcha.php:117
+msgid "Site key"
+msgstr ""
+
+#: inc/recaptcha.php:123
+msgid "Secret key"
+msgstr ""
+
+#: inc/recaptcha.php:126
+msgid "Saved — leave blank to keep it"
+msgstr ""
+
+#: inc/recaptcha.php:128
+msgid "Remove the saved secret key"
+msgstr ""
+
+#: inc/recaptcha.php:130
+msgid "Kept private: it's never shown again after saving."
+msgstr ""
+
+#: inc/recaptcha.php:134
+msgid "Strictness (v3 only)"
+msgstr ""
+
+#: inc/recaptcha.php:137
+msgid "Google scores each submission from 0.0 (likely a bot) to 1.0 (likely a person). Submissions below this score are blocked. 0.5 is a good default; lower it if real people are being blocked."
+msgstr ""
+
+#: inc/recaptcha.php:144
+msgid "Getting your keys"
+msgstr ""
+
+#. translators: %s: link to the Google reCAPTCHA admin console
+#: inc/recaptcha.php:150
+#, php-format
+msgid "Sign in to the %s with a Google account."
+msgstr ""
+
+#: inc/recaptcha.php:151
+msgid "Google reCAPTCHA admin console"
+msgstr ""
+
+#: inc/recaptcha.php:155
+msgid "Choose the same type you picked above (score-based v3, or v2 \"I'm not a robot\" checkbox)."
+msgstr ""
+
+#. translators: %s: this site's domain
+#: inc/recaptcha.php:157
+#, php-format
+msgid "Add your website's domain: %s"
+msgstr ""
+
+#: inc/recaptcha.php:158
+msgid "Copy the site key and secret key into the fields above and save."
+msgstr ""
+
+#: inc/recaptcha.php:160
+msgid "Privacy:"
+msgstr ""
+
+#: inc/recaptcha.php:160
+msgid "reCAPTCHA sends visitor and device information to Google. Mention it in your Privacy Policy."
+msgstr ""
+
+#. translators: 1: Google Privacy Policy link, 2: Google Terms of Service link
+#: inc/recaptcha.php:202
+#, php-format
+msgid "This form is protected by reCAPTCHA and the Google %1$s and %2$s apply."
+msgstr ""
+
+#: inc/recaptcha.php:203
+msgid "Privacy Policy"
+msgstr ""
+
+#: inc/recaptcha.php:204
+msgid "Terms of Service"
+msgstr ""
+
+#: inc/setup.php:40
+msgid "Primary Menu"
+msgstr ""
+
+#: inc/setup.php:41
+msgid "Footer Quick Links"
+msgstr ""
+
+#: inc/setup.php:42
+msgid "Footer Legal Links"
+msgstr ""
+
+#: inc/template-functions.php:29
+msgid "Warm, practical support for life's hardest seasons"
+msgstr ""
+
+#: inc/template-functions.php:30
+msgid "Individual therapy for adults — in person and via telehealth."
+msgstr ""
+
+#: inc/template-functions.php:31
+msgid "Request a free consultation"
+msgstr ""
+
+#: inc/template-functions.php:37
+msgid "Write a short, welcoming introduction here: who you work with, how you work, and what clients can expect from a first session."
+msgstr ""
+
+#: inc/template-functions.php:51
+msgid "How I can help"
+msgstr ""
+
+#: inc/template-functions.php:54
+msgid "Ready to take the first step?"
+msgstr ""
+
+#: inc/template-functions.php:55
+msgid "Reach out for a free 15-minute consultation to see whether we're a good fit."
+msgstr ""
+
+#: inc/template-functions.php:59
+msgid "In crisis? Call or text 988, or call 911 in an emergency."
+msgstr ""
+
+#: inc/template-functions.php:60
+msgid "If you are in crisis"
+msgstr ""
+
+#: inc/template-functions.php:64
+msgid "Call or text 988 — the Suicide & Crisis Lifeline, free and available 24/7."
+msgstr ""
+
+#: inc/template-functions.php:65
+msgid "If you or someone else is in immediate danger, call 911 or go to the nearest emergency room."
+msgstr ""
+
+#: inc/template-functions.php:66
+msgid "Prefer texting? Text HOME to 741741 (Crisis Text Line)."
+msgstr ""
+
+#: inc/template-functions.php:69
+msgid "This website, email, and contact form are not monitored for emergencies."
+msgstr ""
+
+#: inc/template-functions.php:70
+msgid "Please don't include sensitive health details in this form — we can discuss those privately. This form is not monitored for emergencies; if you are in crisis, call or text 988."
+msgstr ""
+
+#. Template Name of the theme
+msgid "Contact"
+msgstr ""
+
+#: page-templates/template-contact.php:24
+msgid "Send a message"
+msgstr ""
+
+#: page-templates/template-contact.php:37
+msgid "Contact details"
+msgstr ""
+
+#: page-templates/template-contact.php:38
+msgid "Other ways to reach me"
+msgstr ""
+
+#: page-templates/template-contact.php:41
+#: template-parts/contact-form.php:88
+msgid "Phone"
+msgstr ""
+
+#: page-templates/template-contact.php:44
+#: template-parts/contact-form.php:93
+msgid "Email"
+msgstr ""
+
+#: page-templates/template-contact.php:47
+msgid "Office"
+msgstr ""
+
+#: template-parts/contact-form.php:29
+msgid "Thank you — your message was sent. I'll be in touch soon."
+msgstr ""
+
+#: template-parts/contact-form.php:34
+msgid "Please fill in your name, a phone number, and a short description of what you're looking for."
+msgstr ""
+
+#: template-parts/contact-form.php:35
+msgid "Please fill in your name, a valid email address, and a message."
+msgstr ""
+
+#: template-parts/contact-form.php:37
+msgid "Sorry, your message couldn't be sent. Please try again or call instead."
+msgstr ""
+
+#: template-parts/contact-form.php:38
+msgid "Sorry, something went wrong with the form. Please reload the page and try again, or call instead."
+msgstr ""
+
+#. translators: %s: practice phone number
+#: template-parts/contact-form.php:44
+#, php-format
+msgid "You've sent several messages in a short time. Please wait about 10 minutes and try again, or call %s."
+msgstr ""
+
+#: template-parts/contact-form.php:45
+msgid "You've sent several messages in a short time. Please wait about 10 minutes and try again."
+msgstr ""
+
+#. translators: %s: practice phone number
+#: template-parts/contact-form.php:52
+#, php-format
+msgid "Sorry, we couldn't confirm this message came from a person, so it wasn't sent. Please try again, or call %s."
+msgstr ""
+
+#: template-parts/contact-form.php:53
+msgid "Sorry, we couldn't confirm this message came from a person, so it wasn't sent. Please try again."
+msgstr ""
+
+#: template-parts/contact-form.php:82
+msgid "Name"
+msgstr ""
+
+#: template-parts/contact-form.php:101
+msgid "Phone (optional)"
+msgstr ""
+
+#: template-parts/contact-form.php:108
+msgid "Briefly, what are you looking for?"
+msgstr ""
+
+#: template-parts/contact-form.php:108
+msgid "How can I help?"
+msgstr ""
+
+#: template-parts/contact-form.php:116
+msgid "* Required"
+msgstr ""
+
+#: template-parts/contact-form.php:118
+msgid "Send request"
+msgstr ""
+
+#: template-parts/contact-form.php:118
+msgid "Send message"
+msgstr ""
+
+#: template-parts/content/none.php:11
+msgid "Page not found"
+msgstr ""
+
+#: template-parts/content/none.php:15
+msgid "Sorry, we couldn't find that page."
+msgstr ""
+
+#: template-parts/content/none.php:16
+msgid "Back to the homepage"
+msgstr ""
+
+#: template-parts/crisis-bar.php:8
+msgid "Crisis resources"
+msgstr ""
+
+#: template-parts/home/about.php:23
+msgid "Meet your therapist"
+msgstr ""
+
+#: template-parts/home/about.php:27
+msgid "More about my approach"
+msgstr ""
+
+#: template-parts/home/cta.php:30
+msgid "Request a call back"
+msgstr ""
+
+#: template-parts/home/cta.php:34
+msgid "or call"
+msgstr ""
+
+#: template-parts/home/cta.php:54
+msgid "More ways to get in touch"
+msgstr ""
+
+#. translators: %s: phone number
+#: template-parts/home/hero.php:38
+#, php-format
+msgid "Call %s"
+msgstr ""
+
+#: template-parts/home/practice-info.php:27
+msgid "Practice details"
+msgstr ""
+
+#: template-parts/home/practice-info.php:39
+msgid "Get directions"
+msgstr ""
+
+#: template-parts/home/practice-info.php:39
+msgid "(opens map)"
+msgstr ""
+
+#: template-parts/home/practice-info.php:47
+msgid "Sessions & hours"
+msgstr ""
+
+#: template-parts/home/practice-info.php:59
+msgid "Fees & insurance"
+msgstr ""
+
+#: template-parts/home/services.php:15
+msgid "No services yet — this section is hidden from visitors until you add one."
+msgstr ""
+
+#: template-parts/home/services.php:17
+msgid "Add a service"
+msgstr ""
+
+#: template-parts/home/services.php:51
+msgid "View all services"
+msgstr ""
+
+#. translators: 1: service title, 2: new position, 3: total services
+#: assets/js/admin-service-order.js:29
+#, js-format
+msgid "%1$s moved to position %2$d of %3$d."
+msgstr ""

@@ -3,8 +3,11 @@
  * Site header.
  */
 
+defined( 'ABSPATH' ) || exit;
+
 $annefpugh_phone       = annefpugh_mod( 'phone' );
 $annefpugh_contact_url = annefpugh_page_url( 'page_contact' );
+$annefpugh_has_nav     = has_nav_menu( 'primary' ) || $annefpugh_contact_url || $annefpugh_phone;
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -36,6 +39,7 @@ if ( annefpugh_mod( 'show_crisis_bar' ) ) {
 			<?php endif; ?>
 		</div>
 
+		<?php if ( $annefpugh_has_nav ) : ?>
 		<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation">
 			<span class="nav-toggle__bars" aria-hidden="true"></span>
 			<span class="nav-toggle__label"><?php esc_html_e( 'Menu', 'annefpugh' ); ?></span>
@@ -59,6 +63,7 @@ if ( annefpugh_mod( 'show_crisis_bar' ) ) {
 				<a class="button site-nav__cta" href="<?php echo esc_attr( annefpugh_tel_href( $annefpugh_phone ) ); ?>"><?php echo esc_html( $annefpugh_phone ); ?></a>
 			<?php endif; ?>
 		</nav>
+		<?php endif; ?>
 	</div>
 </header>
 

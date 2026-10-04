@@ -37,10 +37,7 @@ function annefpugh_output_schema() {
 		$schema['telephone'] = annefpugh_mod( 'phone' );
 	}
 	if ( annefpugh_mod( 'address' ) ) {
-		$schema['address'] = array(
-			'@type'         => 'PostalAddress',
-			'streetAddress' => preg_replace( '/\s*\n\s*/', ', ', trim( annefpugh_mod( 'address' ) ) ),
-		);
+		$schema['address'] = annefpugh_schema_address( annefpugh_mod( 'address' ) );
 	}
 	if ( annefpugh_mod( 'map_url' ) ) {
 		$schema['hasMap'] = annefpugh_mod( 'map_url' );
@@ -50,6 +47,30 @@ function annefpugh_output_schema() {
 		$schema['image'] = wp_get_attachment_image_url( $logo_id, 'full' );
 	}
 
-	echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_SLASHES ) . "</script>\n";
+	// JSON_HEX_TAG escapes < and > so no value can close the <script> element.
+	echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_HEX_TAG | JSON_HEX_AMP ) . "</script>\n";
+}
+
+/**
+ * Turn the free-text office address into a schema.org PostalAddress.
+ * Recognises a last line like "Berkeley, CA 94707" (or "City, ST, 12345");
+ * anything else is kept whole as the street address.
+ */
+function annefpugh_schema_address( $address ) {
+	$lines = array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', trim( $address ) ) ) ) );
+	$out   = array( '@type' => 'PostalAddress' );
+
+	$last = end( $lines );
+	if ( count( $lines ) > 1 && preg_match( '/^(.+?),\s*([A-Za-z]{2})\.?,?\s+(\d{5}(?:-\d{4})?)$/', $last, $m ) ) {
+		array_pop( $lines );
+		$out['streetAddress']   = implode( ', ', $lines );
+		$out['addressLocality'] = $m[1];
+		$out['addressRegion']   = strtoupper( $m[2] );
+		$out['postalCode']      = $m[3];
+		$out['addressCountry']  = 'US';
+	} else {
+		$out['streetAddress'] = implode( ', ', $lines );
+	}
+	return $out;
 }
 add_action( 'wp_head', 'annefpugh_output_schema' );

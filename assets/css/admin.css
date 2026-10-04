@@ -71,6 +71,81 @@
 	color: #50575e;
 }
 
+/* Services → Change Order */
+
+.afp-order-list {
+	max-width: 760px;
+	margin: 20px 0 0;
+	list-style: none;
+}
+
+.afp-order-item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 0 0 8px;
+	padding: 10px 12px;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+}
+
+.afp-order-item.ui-sortable-helper {
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.afp-order-item--placeholder {
+	height: 52px;
+	background: #f0f6fc;
+	border: 2px dashed #2271b1;
+}
+
+.afp-order-item__handle,
+.afp-order-item__title {
+	cursor: move;
+}
+
+.afp-order-item__handle {
+	color: #787c82;
+}
+
+.afp-order-item__position {
+	min-width: 1.5em;
+	font-weight: 600;
+	color: #50575e;
+	text-align: right;
+}
+
+.afp-order-item__thumb {
+	flex: 0 0 48px;
+	width: 48px;
+	height: 48px;
+	background: #f0f0f1;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.afp-order-item__thumb img {
+	display: block;
+	width: 48px;
+	height: 48px;
+	object-fit: cover;
+}
+
+.afp-order-item__title {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.afp-order-item__status {
+	color: #50575e;
+}
+
+.afp-order-item__buttons {
+	display: flex;
+	gap: 6px;
+}
+
 @media (max-width: 960px) {
 	.afp-layout {
 		grid-template-columns: minmax(0, 1fr);

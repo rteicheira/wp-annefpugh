@@ -4,24 +4,24 @@
  * heading, subheading, and primary/phone calls to action.
  */
 
-$annefpugh_image       = annefpugh_mod( 'hero_image' );
+defined( 'ABSPATH' ) || exit;
+
+// Decorative: the heading carries the meaning, so alt is empty.
+$annefpugh_image_html  = annefpugh_image(
+	annefpugh_mod( 'hero_image' ),
+	'annefpugh-hero',
+	array(
+		'class'         => 'hero__image',
+		'alt'           => '',
+		'loading'       => 'eager',
+		'fetchpriority' => 'high',
+	)
+);
 $annefpugh_contact_url = annefpugh_page_url( 'page_contact' );
 $annefpugh_phone       = annefpugh_mod( 'phone' );
 ?>
-<section class="hero<?php echo $annefpugh_image ? ' hero--has-image' : ''; ?>" aria-labelledby="hero-heading">
-	<?php
-	// Decorative: the heading carries the meaning, so alt is empty.
-	echo annefpugh_image( // phpcs:ignore WordPress.Security.EscapeOutput -- wp_get_attachment_image() output.
-		$annefpugh_image,
-		'annefpugh-hero',
-		array(
-			'class'         => 'hero__image',
-			'alt'           => '',
-			'loading'       => 'eager',
-			'fetchpriority' => 'high',
-		)
-	);
-	?>
+<section class="hero<?php echo $annefpugh_image_html ? ' hero--has-image' : ''; ?>" aria-labelledby="hero-heading">
+	<?php echo $annefpugh_image_html; // phpcs:ignore WordPress.Security.EscapeOutput -- wp_get_attachment_image() output. ?>
 	<div class="container hero__content">
 		<h1 id="hero-heading" class="hero__heading"><?php echo esc_html( annefpugh_mod( 'hero_heading' ) ); ?></h1>
 		<?php if ( annefpugh_mod( 'hero_subheading' ) ) : ?>

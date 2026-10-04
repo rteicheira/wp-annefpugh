@@ -26,7 +26,7 @@ function annefpugh_register_service_post_type() {
 				'featured_image'     => __( 'Service image', 'annefpugh' ),
 				'set_featured_image' => __( 'Set service image', 'annefpugh' ),
 			),
-			'description'         => __( 'Services offered by the practice. Excerpt = short summary on the homepage; content = full description on the Services page. Order with the "Order" field.', 'annefpugh' ),
+			'description'         => __( 'Services offered by the practice. Excerpt = short summary on the homepage; content = full description on the Services page. Reorder under Services → Change Order.', 'annefpugh' ),
 			'public'              => false,
 			'show_ui'             => true,
 			'show_in_menu'        => true,
@@ -36,7 +36,7 @@ function annefpugh_register_service_post_type() {
 			'rewrite'             => false,
 			'menu_position'       => 20,
 			'menu_icon'           => 'dashicons-heart',
-			'supports'            => array( 'title', 'editor', 'excerpt', 'thumbnail', 'page-attributes' ),
+			'supports'            => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
 		)
 	);
 }

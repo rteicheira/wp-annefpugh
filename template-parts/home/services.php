@@ -3,6 +3,8 @@
  * Homepage services: responsive card grid from the Service post type.
  */
 
+defined( 'ABSPATH' ) || exit;
+
 $annefpugh_services     = annefpugh_get_services( annefpugh_mod( 'services_count' ) );
 $annefpugh_services_url = annefpugh_page_url( 'page_services' );
 

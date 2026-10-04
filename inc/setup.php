@@ -47,8 +47,10 @@ add_action( 'after_setup_theme', 'annefpugh_setup' );
 
 function annefpugh_assets() {
 	$uri = get_template_directory_uri();
-	wp_enqueue_style( 'annefpugh-main', $uri . '/assets/css/main.css', array(), ANNEFPUGH_VERSION );
-	wp_enqueue_script( 'annefpugh-navigation', $uri . '/assets/js/navigation.js', array(), ANNEFPUGH_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_enqueue_style( 'annefpugh-main', $uri . '/assets/css/main.css', array(), annefpugh_asset_version( 'assets/css/main.css' ) );
+	wp_enqueue_script( 'annefpugh-navigation', $uri . '/assets/js/navigation.js', array(), annefpugh_asset_version( 'assets/js/navigation.js' ), array( 'strategy' => 'defer', 'in_footer' => true ) );
+	// Registered here, enqueued by template-parts/home/cta.php only on pages that show it.
+	wp_register_script( 'annefpugh-callback-toggle', $uri . '/assets/js/callback-toggle.js', array(), annefpugh_asset_version( 'assets/js/callback-toggle.js' ), array( 'strategy' => 'defer', 'in_footer' => true ) );
 }
 add_action( 'wp_enqueue_scripts', 'annefpugh_assets' );
 
@@ -70,3 +72,12 @@ function annefpugh_remove_comments_menu() {
 	remove_menu_page( 'edit-comments.php' );
 }
 add_action( 'admin_menu', 'annefpugh_remove_comments_menu' );
+
+function annefpugh_remove_comments_admin_bar( WP_Admin_Bar $admin_bar ) {
+	$admin_bar->remove_node( 'comments' );
+}
+add_action( 'admin_bar_menu', 'annefpugh_remove_comments_admin_bar', 999 );
+
+// No comment feeds to advertise.
+add_filter( 'feed_links_show_comments_feed', '__return_false' );
+remove_action( 'wp_head', 'feed_links_extra', 3 );

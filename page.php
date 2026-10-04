@@ -3,6 +3,8 @@
  * Default page template — About, Fees & FAQ, and legal pages.
  */
 
+defined( 'ABSPATH' ) || exit;
+
 get_header();
 
 while ( have_posts() ) :

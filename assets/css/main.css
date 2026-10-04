@@ -5,17 +5,32 @@
    ========================================================================== */
 
 :root {
-	--color-primary: #1d5fa8;
-	--color-on-primary: #ffffff;
-	--color-secondary: #4f5e1f;
+	--color-bg: #ffffff;
 	--color-text: #1b2a4a;
 	--color-heading: #1b2a4a;
 	--color-surface: #f7f4ec;
+	--color-surface-text: #1b2a4a;
+	--color-surface-heading: #1b2a4a;
+	--color-header-bg: #ffffff;
+	--color-header-text: #1b2a4a;
+	--color-card-bg: #ffffff;
+	--color-card-text: #1b2a4a;
+	--color-card-heading: #1b2a4a;
+	--color-primary: #1d5fa8;
+	--color-on-primary: #ffffff;
+	--color-link: #1d5fa8;
+	--color-focus: #1d5fa8;
+	--color-surface-link: #1d5fa8;
+	--color-header-link: #1d5fa8;
+	--color-card-link: #1d5fa8;
+	--color-secondary: #4f5e1f;
+	--color-eyebrow: #4f5e1f;
 	--color-footer-bg: #1b2a4a;
 	--color-footer-text: #ffffff;
 	--color-on-overlay: #ffffff;
 	--hero-overlay: rgba(27, 42, 74, 0.45);
 	--color-border: rgba(27, 42, 74, 0.14);
+	--color-field-border: #7a8194; /* 3.9:1 on white — WCAG 1.4.11 needs 3:1 */
 
 	--font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 	--font-heading: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
@@ -45,7 +60,7 @@ body {
 	font-size: 1.0625rem;
 	line-height: 1.65;
 	color: var(--color-text);
-	background-color: #ffffff;
+	background-color: var(--color-bg);
 }
 
 img {
@@ -74,7 +89,7 @@ p {
 }
 
 a {
-	color: var(--color-primary);
+	color: var(--color-link);
 	text-underline-offset: 0.15em;
 }
 
@@ -83,8 +98,52 @@ a:hover {
 }
 
 :focus-visible {
-	outline: 3px solid var(--color-primary);
+	outline: 3px solid var(--color-focus);
 	outline-offset: 3px;
+}
+
+/* On dark areas the focus ring takes the area's own (contrast-checked) text color. */
+.site-footer :focus-visible,
+.crisis-bar :focus-visible,
+.skip-link:focus-visible {
+	outline-color: var(--color-footer-text);
+}
+
+.hero--has-image :focus-visible,
+.page-header--has-image :focus-visible {
+	outline-color: var(--color-on-overlay);
+}
+
+/* Text on the alternate-background areas. Links and focus rings are
+   re-pointed per area so each is checked against the background it's on. */
+.section--surface,
+.cta-band,
+.hero:not(.hero--has-image),
+.page-header:not(.page-header--has-image),
+.contact-details {
+	--color-link: var(--color-surface-link);
+	--color-focus: var(--color-surface-link);
+	color: var(--color-surface-text);
+}
+
+.site-header {
+	--color-link: var(--color-header-link);
+	--color-focus: var(--color-header-link);
+}
+
+/* Cards keep the surrounding focus color: their outline is drawn outside the card. */
+.card {
+	--color-link: var(--color-card-link);
+}
+
+.cta-band__panel {
+	--color-link: var(--color-card-link);
+	--color-focus: var(--color-card-link);
+}
+
+/* :where() keeps this low-specificity so cards inside these areas keep their own heading color. */
+:where(.section--surface, .cta-band, .hero:not(.hero--has-image), .page-header:not(.page-header--has-image), .contact-details) :is(h1, h2, h3, h4) {
+	color: var(--color-surface-heading);
 }
 
 address {
@@ -176,7 +235,7 @@ address {
 	font-weight: 600;
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
-	color: var(--color-secondary);
+	color: var(--color-eyebrow);
 }
 
 /* ---- Crisis bar ---- */
@@ -201,7 +260,8 @@ address {
 /* ---- Header & navigation ---- */
 
 .site-header {
-	background: #ffffff;
+	background: var(--color-header-bg);
+	color: var(--color-header-text);
 	border-bottom: 1px solid var(--color-border);
 	position: sticky;
 	top: 0;
@@ -225,13 +285,13 @@ address {
 	font-family: var(--font-heading);
 	font-size: 1.35rem;
 	font-weight: 600;
-	color: var(--color-heading);
+	color: var(--color-header-text);
 	text-decoration: none;
 }
 
 .site-credentials {
 	font-size: 0.875rem;
-	color: var(--color-text);
+	color: var(--color-header-text);
 }
 
 .custom-logo {
@@ -256,14 +316,14 @@ address {
 .site-nav__list a {
 	display: inline-block;
 	padding: 0.6rem 0;
-	color: var(--color-text);
+	color: var(--color-header-text);
 	font-weight: 500;
 	text-decoration: none;
 }
 
 .site-nav__list a:hover,
 .site-nav__list .current-menu-item > a {
-	color: var(--color-primary);
+	color: var(--color-link);
 	text-decoration: underline;
 }
 
@@ -276,7 +336,7 @@ address {
 	border: 1px solid var(--color-border);
 	border-radius: 999px;
 	background: transparent;
-	color: var(--color-text);
+	color: var(--color-header-text);
 	font: inherit;
 	font-weight: 600;
 	cursor: pointer;
@@ -317,7 +377,7 @@ address {
 		align-items: stretch;
 		gap: 0.75rem;
 		padding: 1rem var(--gutter) 1.5rem;
-		background: #ffffff;
+		background: var(--color-header-bg);
 		border-bottom: 1px solid var(--color-border);
 		box-shadow: var(--shadow);
 	}
@@ -466,7 +526,8 @@ address {
 	flex-direction: column;
 	height: 100%;
 	overflow: hidden;
-	background: #ffffff;
+	background: var(--color-card-bg);
+	color: var(--color-card-text);
 	border-radius: var(--radius);
 	box-shadow: var(--shadow);
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -491,8 +552,9 @@ address {
 	margin-bottom: 0.5rem;
 }
 
+.card__title,
 .card__link {
-	color: var(--color-heading);
+	color: var(--color-card-heading);
 	text-decoration: none;
 }
 
@@ -508,7 +570,7 @@ address {
 }
 
 .card:has(.card__link:focus-visible) {
-	outline: 3px solid var(--color-primary);
+	outline: 3px solid var(--color-focus);
 	outline-offset: 3px;
 }
 
@@ -547,22 +609,56 @@ address {
 }
 
 .cta-band__inner {
-	display: grid;
-	grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-	gap: 2rem;
-	align-items: center;
+	max-width: 52rem;
+	text-align: center;
 }
 
-.cta-band__inner p {
-	margin: 0;
+.cta-band__lead {
+	max-width: 38rem;
+	margin: 0 auto 1.75rem;
+	font-size: 1.125rem;
 }
 
 .cta-band__actions {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	justify-content: flex-end;
-	gap: 1rem 1.5rem;
+	justify-content: center;
+	gap: 0.75rem 1.25rem;
+}
+
+.cta-band__call a {
+	font-weight: 700;
+}
+
+.cta-band__panel {
+	margin-top: 2rem;
+	padding: clamp(1.25rem, 3vw, 2rem);
+	background: var(--color-card-bg);
+	color: var(--color-card-text);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+	text-align: left;
+}
+
+.cta-band__panel :is(h2, h3, label) {
+	color: var(--color-card-heading);
+}
+
+.cta-band__panel[hidden] {
+	display: none;
+}
+
+.cta-band__panel .form-privacy-note {
+	margin-top: 0;
+}
+
+.cta-band__more {
+	margin: 1.5rem 0 0;
+}
+
+.contact-form-wrap {
+	scroll-margin-top: 110px;
 }
 
 /* ---- Interior pages ---- */
@@ -676,10 +772,11 @@ address {
 	width: 100%;
 	min-height: 44px;
 	padding: 0.7rem 0.85rem;
-	border: 1px solid rgba(27, 42, 74, 0.45);
+	border: 1px solid var(--color-field-border);
 	border-radius: 8px;
+	/* Fields are always white with dark text, so they stay legible on any card color. */
 	background: #ffffff;
-	color: var(--color-text);
+	color: #1b2a4a;
 	font: inherit;
 }
 
@@ -695,6 +792,16 @@ address {
 
 .form-required-note {
 	margin: 0;
+}
+
+.form-recaptcha-note {
+	margin: 0;
+	font-size: 0.8125rem;
+}
+
+/* Google allows hiding the floating v3 badge when the attribution text is shown. */
+.grecaptcha-badge {
+	visibility: hidden;
 }
 
 .notice {
@@ -821,17 +928,12 @@ address {
 
 @media (max-width: 860px) {
 	.home-about__grid,
-	.cta-band__inner,
 	.contact-grid {
 		grid-template-columns: minmax(0, 1fr);
 	}
 
 	.home-about__media {
 		max-width: 360px;
-	}
-
-	.cta-band__actions {
-		justify-content: flex-start;
 	}
 }
 

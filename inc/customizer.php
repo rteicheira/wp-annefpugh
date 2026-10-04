@@ -1,6 +1,7 @@
 <?php
 /**
- * Customizer: colors, images, practice details, homepage copy, page links.
+ * Customizer: colors, images, homepage copy, crisis wording, page links.
+ * (Therapist and practice details are on the Practice Info admin screen.)
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -70,14 +71,17 @@ function annefpugh_customize_register( WP_Customize_Manager $wp_customize ) {
 	}
 
 	// Colors: core "Colors" section (it already holds the background color).
-	$contrast_note = __( 'Button and footer text colors are chosen automatically for readable contrast.', 'annefpugh' );
-	$colors        = array(
-		'color_primary'      => array( __( 'Primary (buttons, links)', 'annefpugh' ), $contrast_note ),
+	$wp_customize->get_section( 'colors' )->description = __( 'Pick any colors you like. To keep the site readable for everyone (WCAG AA), text, links, and focus outlines are automatically darkened or lightened where needed so they always contrast with the background behind them.', 'annefpugh' );
+
+	$colors = array(
+		'color_primary'      => array( __( 'Primary (buttons, links)', 'annefpugh' ), __( 'Button text is set to white or black automatically. Links use a darker shade if this color is too light to read.', 'annefpugh' ) ),
 		'color_secondary'    => array( __( 'Secondary accent', 'annefpugh' ), '' ),
-		'color_text'         => array( __( 'Body text', 'annefpugh' ), __( 'Keep this dark against your background for accessibility (4.5:1 contrast).', 'annefpugh' ) ),
+		'color_text'         => array( __( 'Body text', 'annefpugh' ), '' ),
 		'color_heading'      => array( __( 'Headings', 'annefpugh' ), '' ),
 		'color_surface'      => array( __( 'Alternate section background', 'annefpugh' ), '' ),
-		'color_footer_bg'    => array( __( 'Footer background', 'annefpugh' ), $contrast_note ),
+		'color_header_bg'    => array( __( 'Header background', 'annefpugh' ), '' ),
+		'color_card_bg'      => array( __( 'Card and form background', 'annefpugh' ), __( 'Service cards and the call-back form.', 'annefpugh' ) ),
+		'color_footer_bg'    => array( __( 'Footer and crisis bar background', 'annefpugh' ), __( 'Text color is set automatically.', 'annefpugh' ) ),
 		'hero_overlay_color' => array( __( 'Hero image overlay', 'annefpugh' ), '' ),
 	);
 	foreach ( $colors as $id => $labels ) {
@@ -133,10 +137,33 @@ function annefpugh_customize_register( WP_Customize_Manager $wp_customize ) {
 		'annefpugh_sanitize_checkbox',
 		array(
 			'type'        => 'checkbox',
-			'label'       => __( 'Show the 988/911 crisis bar at the top of every page', 'annefpugh' ),
+			'label'       => __( 'Show the crisis bar at the top of every page', 'annefpugh' ),
 			'description' => __( 'The crisis notice in the footer is always shown and can\'t be turned off.', 'annefpugh' ),
 		)
 	);
+
+	$wp_customize->get_section( 'annefpugh_safety' )->description = __( 'Phone numbers you type here (like 988, 911, or (555) 123-4567) automatically become tap-to-call links. Text HOME to 741741 becomes a tap-to-text link. Any field left blank goes back to the standard wording, so crisis information can\'t disappear by accident.', 'annefpugh' );
+
+	$crisis_fields = array(
+		'crisis_bar_text'     => array( 'text', __( 'Crisis bar text (top of page)', 'annefpugh' ), '' ),
+		'crisis_heading'      => array( 'text', __( 'Footer crisis heading', 'annefpugh' ), '' ),
+		'crisis_items'        => array( 'textarea', __( 'Footer crisis resources', 'annefpugh' ), __( 'One resource per line. Each line becomes a bullet point.', 'annefpugh' ) ),
+		'crisis_disclaimer'   => array( 'text', __( 'Footer note', 'annefpugh' ), __( 'Shown below the resources.', 'annefpugh' ) ),
+		'contact_form_notice' => array( 'textarea', __( 'Contact form safety note', 'annefpugh' ), __( 'Shown above both forms: the Contact page form and the "Request a call back" form on the homepage and Services page.', 'annefpugh' ) ),
+	);
+	foreach ( $crisis_fields as $id => $field ) {
+		annefpugh_add_field(
+			$wp_customize,
+			$id,
+			'annefpugh_safety',
+			'textarea' === $field[0] ? 'sanitize_textarea_field' : 'sanitize_text_field',
+			array(
+				'type'        => $field[0],
+				'label'       => $field[1],
+				'description' => $field[2],
+			)
+		);
+	}
 
 	// Page links.
 	$page_links = array(

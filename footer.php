@@ -3,6 +3,8 @@
  * Site footer: crisis notice, practice details, quick links, legal links.
  */
 
+defined( 'ABSPATH' ) || exit;
+
 $annefpugh_phone   = annefpugh_mod( 'phone' );
 $annefpugh_email   = annefpugh_mod( 'email' );
 $annefpugh_address = annefpugh_mod( 'address' );
@@ -49,23 +51,25 @@ $annefpugh_license = annefpugh_mod( 'license' );
 				</nav>
 			<?php endif; ?>
 
-			<nav class="footer-col" aria-labelledby="footer-legal-heading">
-				<h2 id="footer-legal-heading" class="footer-heading"><?php esc_html_e( 'Policies', 'annefpugh' ); ?></h2>
-				<?php
-				if ( has_nav_menu( 'legal' ) ) {
-					wp_nav_menu(
-						array(
-							'theme_location' => 'legal',
-							'container'      => false,
-							'menu_class'     => 'footer-menu',
-							'depth'          => 1,
-						)
-					);
-				} elseif ( get_privacy_policy_url() ) {
-					echo '<ul class="footer-menu"><li>' . get_the_privacy_policy_link() . '</li></ul>'; // phpcs:ignore WordPress.Security.EscapeOutput -- core returns escaped markup.
-				}
-				?>
-			</nav>
+			<?php if ( has_nav_menu( 'legal' ) || get_privacy_policy_url() ) : ?>
+				<nav class="footer-col" aria-labelledby="footer-legal-heading">
+					<h2 id="footer-legal-heading" class="footer-heading"><?php esc_html_e( 'Policies', 'annefpugh' ); ?></h2>
+					<?php
+					if ( has_nav_menu( 'legal' ) ) {
+						wp_nav_menu(
+							array(
+								'theme_location' => 'legal',
+								'container'      => false,
+								'menu_class'     => 'footer-menu',
+								'depth'          => 1,
+							)
+						);
+					} else {
+						echo '<ul class="footer-menu"><li>' . get_the_privacy_policy_link() . '</li></ul>'; // phpcs:ignore WordPress.Security.EscapeOutput -- core returns escaped markup.
+					}
+					?>
+				</nav>
+			<?php endif; ?>
 		</div>
 
 		<div class="footer-bottom">

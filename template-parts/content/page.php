@@ -2,6 +2,8 @@
 /**
  * Page header (title + optional featured image banner) and content.
  */
+
+defined( 'ABSPATH' ) || exit;
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class( 'page-article' ); ?>>
 	<header class="page-header<?php echo has_post_thumbnail() ? ' page-header--has-image' : ''; ?>">

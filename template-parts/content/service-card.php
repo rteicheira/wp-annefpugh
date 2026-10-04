@@ -5,6 +5,8 @@
  * @var array $args { service: WP_Post, link: string }
  */
 
+defined( 'ABSPATH' ) || exit;
+
 $annefpugh_service = $args['service'];
 $annefpugh_link    = isset( $args['link'] ) ? $args['link'] : '';
 $annefpugh_summary = has_excerpt( $annefpugh_service )
