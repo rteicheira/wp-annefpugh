@@ -13,6 +13,6 @@ defined( 'ABSPATH' ) || exit;
 	</header>
 	<div class="container entry-content">
 		<p><?php esc_html_e( 'Sorry, we couldn\'t find that page.', 'annefpugh' ); ?></p>
-		<p><a class="button" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Back to the homepage', 'annefpugh' ); ?></a></p>
+		<p><a class="button" href="<?php echo esc_url( home_url( '/' ) ); ?>"><span class="button__label"><?php esc_html_e( 'Back to the homepage', 'annefpugh' ); ?></span></a></p>
 	</div>
 </section>

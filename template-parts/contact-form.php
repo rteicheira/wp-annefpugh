@@ -115,7 +115,7 @@ $annefpugh_messages = array(
 
 		<p class="form-required-note"><?php esc_html_e( '* Required', 'annefpugh' ); ?></p>
 		<button class="button button--large" type="submit">
-			<?php $annefpugh_quick ? esc_html_e( 'Send request', 'annefpugh' ) : esc_html_e( 'Send message', 'annefpugh' ); ?>
+			<span class="button__label"><?php $annefpugh_quick ? esc_html_e( 'Send request', 'annefpugh' ) : esc_html_e( 'Send message', 'annefpugh' ); ?></span>
 		</button>
 	</form>
 </div>

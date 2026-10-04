@@ -21,8 +21,23 @@
 			}
 		};
 
+		// The header button links to #get-started when there's no Contact page:
+		// arriving that way opens the form ready to fill in.
+		const section = toggle.closest( 'section' );
+		const linkedHere = () => section && section.id && window.location.hash === '#' + section.id;
+
 		toggle.hidden = false;
-		setOpen( '1' === panel.dataset.open, false );
+		setOpen( '1' === panel.dataset.open || linkedHere(), false );
+
+		window.addEventListener( 'hashchange', () => {
+			if ( linkedHere() ) {
+				setOpen( true, false );
+				const first = panel.querySelector( 'input:not([type="hidden"]):not([tabindex="-1"]), textarea' );
+				if ( first ) {
+					first.focus( { preventScroll: true } );
+				}
+			}
+		} );
 
 		toggle.addEventListener( 'click', () => {
 			setOpen( panel.hidden, true );

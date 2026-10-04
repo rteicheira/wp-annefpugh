@@ -9,6 +9,12 @@
 	form.on( 'input change', () => {
 		dirty = true;
 	} );
+	// The visual editor lives in an iframe, so its typing doesn't reach the form.
+	$( document ).on( 'tinymce-editor-init', ( event, editor ) => {
+		editor.on( 'input change undo redo', () => {
+			dirty = true;
+		} );
+	} );
 	form.on( 'submit', () => {
 		dirty = false;
 	} );

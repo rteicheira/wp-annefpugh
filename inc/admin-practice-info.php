@@ -40,11 +40,10 @@ function annefpugh_practice_field_groups() {
 					'help'  => __( 'A warm, friendly headshot. Portrait (taller than wide) photos look best.', 'annefpugh' ),
 				),
 				'therapist_intro'       => array(
-					'label'       => __( 'Short introduction', 'annefpugh' ),
-					'type'        => 'textarea',
-					'rows'        => 6,
-					'placeholder' => __( 'I help adults navigating…', 'annefpugh' ),
-					'help'        => __( 'A few welcoming sentences shown next to your photo on the homepage. Leave a blank line between paragraphs.', 'annefpugh' ),
+					'label' => __( 'Short introduction', 'annefpugh' ),
+					'type'  => 'editor',
+					'rows'  => 8,
+					'help'  => __( 'A few welcoming sentences shown next to your photo on the homepage. Press Enter for a new paragraph. You can use bold, italics, links, and lists.', 'annefpugh' ),
 				),
 			),
 		),
@@ -62,7 +61,13 @@ function annefpugh_practice_field_groups() {
 					'label'       => __( 'Email address', 'annefpugh' ),
 					'type'        => 'email',
 					'placeholder' => __( 'you@yourpractice.com', 'annefpugh' ),
-					'help'        => __( 'Contact form messages are sent here. It\'s also shown in the footer.', 'annefpugh' ),
+					'help'        => __( 'Contact form messages are sent here. Unless you hide it below, it\'s also shown in the footer and on your Contact page.', 'annefpugh' ),
+				),
+				'hide_email' => array(
+					'label'          => __( 'Email privacy', 'annefpugh' ),
+					'type'           => 'checkbox',
+					'checkbox_label' => __( 'Don\'t show my email address on the website', 'annefpugh' ),
+					'help'           => __( 'Visitors will reach you through the contact forms instead, and you\'ll still receive their messages at the address above. Hiding it also keeps it away from spammers who collect addresses from websites.', 'annefpugh' ),
 				),
 			),
 		),
@@ -134,10 +139,14 @@ function annefpugh_practice_sanitize( $type, $value ) {
 		case 'image':
 			$id = absint( $value );
 			return ( $id && wp_attachment_is_image( $id ) ) ? $id : 0;
+		case 'checkbox':
+			return '1' === $value; // Unchecked boxes aren't submitted at all → ''.
 		case 'email':
 			return sanitize_email( $value );
 		case 'url':
 			return esc_url_raw( $value );
+		case 'editor':
+			return wp_kses( $value, annefpugh_intro_allowed_html() );
 		case 'textarea':
 			return sanitize_textarea_field( $value );
 		default:
@@ -221,14 +230,39 @@ function annefpugh_render_practice_field( $key, $field ) {
 	$described   = ! empty( $field['help'] ) ? ' aria-describedby="' . esc_attr( $help_id ) . '"' : '';
 
 	echo '<tr><th scope="row">';
-	if ( 'image' === $field['type'] ) {
-		echo esc_html( $field['label'] );
+	if ( in_array( $field['type'], array( 'image', 'checkbox' ), true ) ) {
+		echo esc_html( $field['label'] ); // These carry their own labels inside the cell.
 	} else {
 		echo '<label for="' . esc_attr( $key ) . '">' . esc_html( $field['label'] ) . '</label>';
 	}
 	echo '</th><td>';
 
-	if ( 'textarea' === $field['type'] ) {
+	if ( 'editor' === $field['type'] ) {
+		wp_editor(
+			(string) $value,
+			$key,
+			array(
+				'textarea_name' => $key,
+				'textarea_rows' => isset( $field['rows'] ) ? absint( $field['rows'] ) : 8,
+				'media_buttons' => false,
+				'teeny'         => true,
+				'quicktags'     => array( 'buttons' => 'strong,em,link,ul,ol,li' ),
+				'tinymce'       => array(
+					'toolbar1'      => 'bold,italic,link,unlink,bullist,numlist,undo,redo',
+					'toolbar2'      => '',
+					'block_formats' => 'Paragraph=p',
+				),
+			)
+		);
+	} elseif ( 'checkbox' === $field['type'] ) {
+		printf(
+			'<label for="%1$s"><input type="checkbox" id="%1$s" name="%1$s" value="1"%2$s%3$s> %4$s</label>',
+			esc_attr( $key ),
+			checked( (bool) $value, true, false ),
+			$described, // phpcs:ignore WordPress.Security.EscapeOutput -- built from esc_attr above.
+			esc_html( $field['checkbox_label'] )
+		);
+	} elseif ( 'textarea' === $field['type'] ) {
 		printf(
 			'<textarea id="%1$s" name="%1$s" rows="%2$d" class="large-text" placeholder="%3$s"%4$s>%5$s</textarea>',
 			esc_attr( $key ),

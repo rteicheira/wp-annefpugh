@@ -48,7 +48,7 @@ if ( ! $annefpugh_services ) {
 
 		<?php if ( $annefpugh_services_url ) : ?>
 			<p class="section-footer">
-				<a class="button" href="<?php echo esc_url( $annefpugh_services_url ); ?>"><?php esc_html_e( 'View all services', 'annefpugh' ); ?></a>
+				<a class="button" href="<?php echo esc_url( $annefpugh_services_url ); ?>"><span class="button__label"><?php esc_html_e( 'View all services', 'annefpugh' ); ?></span></a>
 			</p>
 		<?php endif; ?>
 	</div>

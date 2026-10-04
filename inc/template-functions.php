@@ -39,6 +39,7 @@ function annefpugh_defaults() {
 		// Practice info.
 		'phone'                => '',
 		'email'                => '',
+		'hide_email'           => false,
 		'address'              => '',
 		'map_url'              => '',
 		'session_format'       => __( 'In person and telehealth', 'annefpugh' ),
@@ -46,6 +47,14 @@ function annefpugh_defaults() {
 		'fees'                 => '',
 		'insurance'            => '',
 		'license'              => '',
+
+		// Header.
+		'header_button_text'   => __( 'Let\'s talk', 'annefpugh' ),
+
+		// Where the Site Icon is shown (Customizer → Site Identity).
+		'icon_in_header'       => true,
+		'icon_in_hero'         => true,
+		'icon_in_footer'       => true,
 
 		// Homepage sections.
 		'services_heading'     => __( 'How I can help', 'annefpugh' ),
@@ -108,6 +117,78 @@ function annefpugh_linkify_phone_numbers( $text ) {
 		},
 		esc_html( $text )
 	);
+}
+
+/**
+ * The Site Icon (Customizer → Site Identity) as an <img>, if one is set and
+ * the given placement ('header', 'hero', 'footer') is switched on.
+ *
+ * @param string $placement Placement key; also used as a class suffix.
+ * @param int    $size      Rendered width/height in CSS pixels.
+ * @param string $alt       Alt text; '' marks it decorative.
+ */
+function annefpugh_site_icon( $placement, $size, $alt = '' ) {
+	$icon_id = (int) get_option( 'site_icon' );
+	if ( ! $icon_id || ! annefpugh_mod( 'icon_in_' . $placement ) ) {
+		return '';
+	}
+	return wp_get_attachment_image(
+		$icon_id,
+		'full',
+		false,
+		array(
+			'class'    => 'site-icon-mark site-icon-mark--' . $placement,
+			'alt'      => $alt,
+			'width'    => $size,
+			'height'   => $size,
+			'sizes'    => $size . 'px',
+			'loading'  => 'footer' === $placement ? 'lazy' : 'eager', // Header and hero are above the fold.
+			'decoding' => 'async',
+		)
+	);
+}
+
+/**
+ * Formatting allowed in the therapist introduction (Practice Info editor):
+ * paragraphs, bold/italic, links, and lists. Applied when saving and again
+ * when displaying.
+ */
+function annefpugh_intro_allowed_html() {
+	return array(
+		'p'      => array(),
+		'br'     => array(),
+		'strong' => array(),
+		'b'      => array(),
+		'em'     => array(),
+		'i'      => array(),
+		'ul'     => array(),
+		'ol'     => array(),
+		'li'     => array(),
+		'a'      => array(
+			'href'   => true,
+			'title'  => true,
+			'target' => true,
+			'rel'    => true,
+		),
+	);
+}
+
+/**
+ * The therapist introduction as safe HTML paragraphs. Works for both the
+ * editor's HTML and older plain-text entries (blank lines → paragraphs).
+ */
+function annefpugh_therapist_intro_html() {
+	return wpautop( wp_kses( (string) annefpugh_mod( 'therapist_intro' ), annefpugh_intro_allowed_html() ) );
+}
+
+/**
+ * The practice email to show on the website, or '' if it's unset, invalid,
+ * or the owner chose to keep it private (Practice Info). Contact form
+ * messages are sent to it either way.
+ */
+function annefpugh_public_email() {
+	$email = annefpugh_mod( 'email' );
+	return ( is_email( $email ) && ! annefpugh_mod( 'hide_email' ) ) ? $email : '';
 }
 
 function annefpugh_therapist_name() {

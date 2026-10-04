@@ -18,7 +18,7 @@ $annefpugh_contact_url = annefpugh_page_url( 'page_contact' );
 // Reopen the form when the visitor lands back here after submitting it.
 $annefpugh_returning = isset( $_GET['form'] ) && 'callback-form' === sanitize_key( wp_unslash( $_GET['form'] ) ); // phpcs:ignore WordPress.Security.NonceVerification -- display-only.
 ?>
-<section class="section cta-band" aria-labelledby="cta-heading">
+<section id="get-started" class="section cta-band" aria-labelledby="cta-heading">
 	<div class="container cta-band__inner">
 		<h2 id="cta-heading"><?php echo esc_html( annefpugh_mod( 'cta_heading' ) ); ?></h2>
 		<?php if ( annefpugh_mod( 'cta_text' ) ) : ?>
@@ -27,7 +27,7 @@ $annefpugh_returning = isset( $_GET['form'] ) && 'callback-form' === sanitize_ke
 
 		<div class="cta-band__actions">
 			<button type="button" class="button button--large cta-band__toggle" aria-expanded="false" aria-controls="callback-panel" hidden>
-				<?php esc_html_e( 'Request a call back', 'annefpugh' ); ?>
+				<span class="button__label"><?php esc_html_e( 'Request a call back', 'annefpugh' ); ?></span>
 			</button>
 			<?php if ( $annefpugh_phone ) : ?>
 				<span class="cta-band__call">

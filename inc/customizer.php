@@ -70,6 +70,28 @@ function annefpugh_customize_register( WP_Customize_Manager $wp_customize ) {
 		$wp_customize->add_section( $id, array( 'title' => $title, 'panel' => 'annefpugh_options' ) );
 	}
 
+	// Site Icon placements: in core "Site Identity", right below the Site Icon picker.
+	$icon_places = array(
+		'icon_in_header' => __( 'Show the site icon in the header, beside your name', 'annefpugh' ),
+		'icon_in_hero'   => __( 'Show the site icon large on the homepage, beside the headline', 'annefpugh' ),
+		'icon_in_footer' => __( 'Show the site icon in the footer', 'annefpugh' ),
+	);
+	$priority    = 61;
+	foreach ( $icon_places as $id => $label ) {
+		annefpugh_add_field(
+			$wp_customize,
+			$id,
+			'title_tagline',
+			'annefpugh_sanitize_checkbox',
+			array(
+				'type'        => 'checkbox',
+				'label'       => $label,
+				'description' => 'icon_in_header' === $id ? __( 'Besides the browser tab, your site icon can be shown on the site itself. (Hidden in the header if you\'ve set a logo.)', 'annefpugh' ) : '',
+				'priority'    => $priority++,
+			)
+		);
+	}
+
 	// Colors: core "Colors" section (it already holds the background color).
 	$wp_customize->get_section( 'colors' )->description = __( 'Pick any colors you like. To keep the site readable for everyone (WCAG AA), text, links, and focus outlines are automatically darkened or lightened where needed so they always contrast with the background behind them.', 'annefpugh' );
 
@@ -123,6 +145,16 @@ function annefpugh_customize_register( WP_Customize_Manager $wp_customize ) {
 	// Therapist and practice details live on the Practice Info admin screen (inc/admin-practice-info.php).
 
 	// Homepage sections.
+	annefpugh_add_field(
+		$wp_customize,
+		'header_button_text',
+		'annefpugh_homepage',
+		'sanitize_text_field',
+		array(
+			'label'       => __( 'Header button text', 'annefpugh' ),
+			'description' => __( 'The button at the top of every page. It goes to your Contact page, or to the "Request a call back" form if you don\'t have one. Keep it short and inviting, e.g. "Let\'s talk" or "Reach out".', 'annefpugh' ),
+		)
+	);
 	annefpugh_add_field( $wp_customize, 'services_heading', 'annefpugh_homepage', 'sanitize_text_field', array( 'label' => __( 'Services heading', 'annefpugh' ) ) );
 	annefpugh_add_field( $wp_customize, 'services_intro', 'annefpugh_homepage', 'sanitize_textarea_field', array( 'type' => 'textarea', 'label' => __( 'Services introduction', 'annefpugh' ) ) );
 	annefpugh_add_field( $wp_customize, 'services_count', 'annefpugh_homepage', 'annefpugh_sanitize_services_count', array( 'type' => 'number', 'label' => __( 'Number of services on the homepage', 'annefpugh' ), 'input_attrs' => array( 'min' => 1, 'max' => 12 ) ) );

@@ -5,9 +5,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$annefpugh_phone       = annefpugh_mod( 'phone' );
-$annefpugh_contact_url = annefpugh_page_url( 'page_contact' );
-$annefpugh_has_nav     = has_nav_menu( 'primary' ) || $annefpugh_contact_url || $annefpugh_phone;
+// Header button: the Contact page if one is set, otherwise the homepage's
+// "Request a call back" section (which opens the form when linked to).
+$annefpugh_cta_url = annefpugh_page_url( 'page_contact' );
+$annefpugh_cta_url = $annefpugh_cta_url ? $annefpugh_cta_url : home_url( '/#get-started' );
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -32,14 +33,22 @@ if ( annefpugh_mod( 'show_crisis_bar' ) ) {
 			<?php if ( has_custom_logo() ) : ?>
 				<?php the_custom_logo(); ?>
 			<?php else : ?>
-				<a class="site-title" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
-				<?php if ( annefpugh_mod( 'therapist_credentials' ) ) : ?>
-					<span class="site-credentials"><?php echo esc_html( annefpugh_mod( 'therapist_credentials' ) ); ?></span>
+				<?php
+				$annefpugh_mark = annefpugh_site_icon( 'header', 52 );
+				if ( $annefpugh_mark ) :
+					// Decorative duplicate of the title link: clickable, but skipped by keyboard and screen readers.
+					?>
+					<a class="site-branding__mark" href="<?php echo esc_url( home_url( '/' ) ); ?>" tabindex="-1" aria-hidden="true"><?php echo $annefpugh_mark; // phpcs:ignore WordPress.Security.EscapeOutput -- wp_get_attachment_image() output. ?></a>
 				<?php endif; ?>
+				<div class="site-branding__text">
+					<a class="site-title" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
+					<?php if ( annefpugh_mod( 'therapist_credentials' ) ) : ?>
+						<span class="site-credentials"><?php echo esc_html( annefpugh_mod( 'therapist_credentials' ) ); ?></span>
+					<?php endif; ?>
+				</div>
 			<?php endif; ?>
 		</div>
 
-		<?php if ( $annefpugh_has_nav ) : ?>
 		<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation">
 			<span class="nav-toggle__bars" aria-hidden="true"></span>
 			<span class="nav-toggle__label"><?php esc_html_e( 'Menu', 'annefpugh' ); ?></span>
@@ -57,13 +66,8 @@ if ( annefpugh_mod( 'show_crisis_bar' ) ) {
 				)
 			);
 			?>
-			<?php if ( $annefpugh_contact_url ) : ?>
-				<a class="button site-nav__cta" href="<?php echo esc_url( $annefpugh_contact_url ); ?>"><?php esc_html_e( 'Get in touch', 'annefpugh' ); ?></a>
-			<?php elseif ( $annefpugh_phone ) : ?>
-				<a class="button site-nav__cta" href="<?php echo esc_attr( annefpugh_tel_href( $annefpugh_phone ) ); ?>"><?php echo esc_html( $annefpugh_phone ); ?></a>
-			<?php endif; ?>
+			<a class="button site-nav__cta" href="<?php echo esc_url( $annefpugh_cta_url ); ?>"><span class="button__label"><?php echo esc_html( annefpugh_required_text( 'header_button_text' ) ); ?></span></a>
 		</nav>
-		<?php endif; ?>
 	</div>
 </header>
 

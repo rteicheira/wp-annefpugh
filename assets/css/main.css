@@ -32,6 +32,8 @@
 	--color-border: rgba(27, 42, 74, 0.14);
 	--color-field-border: #7a8194; /* 3.9:1 on white — WCAG 1.4.11 needs 3:1 */
 
+	--admin-bar-height: 0px; /* set below when the WordPress admin bar is showing */
+
 	--font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 	--font-heading: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
 
@@ -175,7 +177,25 @@ address {
 }
 
 .skip-link:focus {
-	top: 1rem;
+	top: calc(1rem + var(--admin-bar-height));
+}
+
+/* WordPress admin bar (logged-in users): fixed 32px on desktop, 46px on
+   tablets; below 600px it scrolls away with the page, so no offset. */
+body.admin-bar {
+	--admin-bar-height: 32px;
+}
+
+@media screen and (max-width: 782px) {
+	body.admin-bar {
+		--admin-bar-height: 46px;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	body.admin-bar {
+		--admin-bar-height: 0px;
+	}
 }
 
 .site-main:focus {
@@ -225,6 +245,27 @@ address {
 	color: inherit;
 }
 
+/* Optical centering. Fonts reserve more room above the letters than below
+   the baseline, so centering the line box leaves labels sitting low.
+   Trimming the label to cap height + baseline centers the capitals; the extra
+   0.08em lift accounts for mostly-lowercase labels, whose letters sit in the
+   lower part of the cap height (chosen by eye in Chrome/Windows, Segoe UI). */
+.button__label,
+.nav-toggle__label {
+	text-box: trim-both cap alphabetic;
+	translate: 0 -0.08em;
+}
+
+/* Browsers without text-box support (e.g. Firefox): the label isn't trimmed,
+   so it needs a larger lift to land in the same place (≈0.06em for the
+   untrimmed line box + the same 0.08em). */
+@supports not (text-box: trim-both cap alphabetic) {
+	.button__label,
+	.nav-toggle__label {
+		translate: 0 -0.14em;
+	}
+}
+
 .text-link {
 	font-weight: 600;
 }
@@ -264,7 +305,7 @@ address {
 	color: var(--color-header-text);
 	border-bottom: 1px solid var(--color-border);
 	position: sticky;
-	top: 0;
+	top: var(--admin-bar-height); /* sit below the WordPress admin bar when logged in */
 	z-index: 50;
 }
 
@@ -278,7 +319,36 @@ address {
 
 .site-branding {
 	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.site-branding__text {
+	display: flex;
 	flex-direction: column;
+}
+
+.site-branding__mark {
+	display: block;
+	flex: 0 0 auto;
+}
+
+/* Site icon placements (Customizer → Site Identity). The icon is round with
+   transparent corners, so drop-shadow follows the circle. */
+.site-icon-mark {
+	display: block;
+	border-radius: 50%;
+}
+
+.site-icon-mark--header {
+	width: 52px;
+	height: 52px;
+}
+
+.site-icon-mark--footer {
+	width: 96px;
+	height: 96px;
+	margin-bottom: 1rem;
 }
 
 .site-title {
@@ -460,6 +530,41 @@ address {
 	max-width: var(--container);
 }
 
+/* With the site icon: headline on the left, icon showcased on the right. */
+.hero__content--with-mark {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: center;
+	gap: clamp(2rem, 5vw, 4rem);
+}
+
+.hero__content--with-mark .hero__mark {
+	order: 2;
+}
+
+.site-icon-mark--hero {
+	width: clamp(200px, 24vw, 300px);
+	height: auto;
+	aspect-ratio: 1;
+	filter: drop-shadow(0 12px 28px rgba(27, 42, 74, 0.16));
+}
+
+@media (max-width: 860px) {
+	/* Phones/tablets: icon sits above the headline. */
+	.hero__content--with-mark {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 1.5rem;
+	}
+
+	.hero__content--with-mark .hero__mark {
+		order: 0;
+	}
+
+	.site-icon-mark--hero {
+		width: 132px;
+	}
+}
+
 .hero__heading,
 .hero__subheading {
 	max-width: 38rem;
@@ -606,6 +711,7 @@ address {
 
 .cta-band {
 	background: var(--color-surface);
+	scroll-margin-top: calc(80px + var(--admin-bar-height)); /* clear the sticky header (and admin bar) when linked to via #get-started */
 }
 
 .cta-band__inner {
@@ -658,7 +764,7 @@ address {
 }
 
 .contact-form-wrap {
-	scroll-margin-top: 110px;
+	scroll-margin-top: calc(110px + var(--admin-bar-height));
 }
 
 /* ---- Interior pages ---- */
@@ -724,7 +830,7 @@ address {
 	overflow: hidden;
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius);
-	scroll-margin-top: 110px;
+	scroll-margin-top: calc(110px + var(--admin-bar-height));
 }
 
 .service-detail__media img {

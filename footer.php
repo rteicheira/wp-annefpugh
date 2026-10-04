@@ -6,7 +6,7 @@
 defined( 'ABSPATH' ) || exit;
 
 $annefpugh_phone   = annefpugh_mod( 'phone' );
-$annefpugh_email   = annefpugh_mod( 'email' );
+$annefpugh_email   = annefpugh_public_email();
 $annefpugh_address = annefpugh_mod( 'address' );
 $annefpugh_license = annefpugh_mod( 'license' );
 ?>
@@ -18,6 +18,7 @@ $annefpugh_license = annefpugh_mod( 'license' );
 
 		<div class="footer-grid">
 			<section class="footer-col" aria-labelledby="footer-practice-heading">
+				<?php echo annefpugh_site_icon( 'footer', 96 ); // phpcs:ignore WordPress.Security.EscapeOutput -- wp_get_attachment_image() output; decorative (the name follows). ?>
 				<h2 id="footer-practice-heading" class="footer-heading"><?php echo esc_html( annefpugh_therapist_name() ); ?></h2>
 				<?php if ( annefpugh_mod( 'therapist_credentials' ) ) : ?>
 					<p><?php echo esc_html( annefpugh_mod( 'therapist_credentials' ) ); ?></p>
@@ -29,7 +30,7 @@ $annefpugh_license = annefpugh_mod( 'license' );
 					<?php if ( $annefpugh_phone ) : ?>
 						<li><a href="<?php echo esc_attr( annefpugh_tel_href( $annefpugh_phone ) ); ?>"><?php echo esc_html( $annefpugh_phone ); ?></a></li>
 					<?php endif; ?>
-					<?php if ( is_email( $annefpugh_email ) ) : ?>
+					<?php if ( $annefpugh_email ) : ?>
 						<li><a href="mailto:<?php echo esc_attr( antispambot( $annefpugh_email ) ); ?>"><?php echo esc_html( antispambot( $annefpugh_email ) ); ?></a></li>
 					<?php endif; ?>
 				</ul>

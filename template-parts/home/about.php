@@ -22,7 +22,7 @@ $annefpugh_credentials = annefpugh_mod( 'therapist_credentials' );
 		<div class="home-about__text">
 			<p class="eyebrow"><?php esc_html_e( 'Meet your therapist', 'annefpugh' ); ?></p>
 			<h2 id="home-about-heading"><?php echo esc_html( annefpugh_therapist_name() ); ?><?php if ( $annefpugh_credentials ) : ?><span class="credentials">, <?php echo esc_html( $annefpugh_credentials ); ?></span><?php endif; ?></h2>
-			<?php echo wpautop( esc_html( annefpugh_mod( 'therapist_intro' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped before wpautop. ?>
+			<?php echo annefpugh_therapist_intro_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- filtered by wp_kses() inside. ?>
 			<?php if ( $annefpugh_about_url ) : ?>
 				<a class="text-link" href="<?php echo esc_url( $annefpugh_about_url ); ?>"><?php esc_html_e( 'More about my approach', 'annefpugh' ); ?></a>
 			<?php endif; ?>
