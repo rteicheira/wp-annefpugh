@@ -55,6 +55,33 @@ function annefpugh_assets() {
 add_action( 'wp_enqueue_scripts', 'annefpugh_assets' );
 
 /**
+ * Menu links to a section of a page (e.g. "/#practice-info-heading") point
+ * at part of a page, not a page. WordPress ignores the "#…" when deciding
+ * the current item, so on the homepage every such link would be marked
+ * active (and announced as "current page"). Undo that for anchor links.
+ */
+function annefpugh_is_anchor_menu_item( $item ) {
+	return isset( $item->url ) && false !== strpos( $item->url, '#' ) && '#' !== substr( $item->url, -1 );
+}
+
+function annefpugh_anchor_menu_item_classes( $classes, $item ) {
+	if ( ! annefpugh_is_anchor_menu_item( $item ) ) {
+		return $classes;
+	}
+	$current = array( 'current-menu-item', 'current_page_item', 'current-menu-parent', 'current_page_parent', 'current-menu-ancestor', 'current_page_ancestor' );
+	return array_values( array_diff( (array) $classes, $current ) );
+}
+add_filter( 'nav_menu_css_class', 'annefpugh_anchor_menu_item_classes', 10, 2 );
+
+function annefpugh_anchor_menu_item_attributes( $atts, $item ) {
+	if ( annefpugh_is_anchor_menu_item( $item ) ) {
+		unset( $atts['aria-current'] );
+	}
+	return $atts;
+}
+add_filter( 'nav_menu_link_attributes', 'annefpugh_anchor_menu_item_attributes', 10, 2 );
+
+/**
  * No blog on a single-provider site: turn comments off everywhere.
  */
 function annefpugh_disable_comments() {

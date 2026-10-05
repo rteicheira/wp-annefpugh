@@ -180,6 +180,12 @@ address {
 	top: calc(1rem + var(--admin-bar-height));
 }
 
+/* Anything a menu link can jump to (e.g. /#practice-info-heading) stops below
+   the sticky header instead of underneath it. */
+:where([id]) {
+	scroll-margin-top: calc(96px + var(--admin-bar-height));
+}
+
 /* WordPress admin bar (logged-in users): fixed 32px on desktop, 46px on
    tablets; below 600px it scrolls away with the page, so no offset. */
 body.admin-bar {
