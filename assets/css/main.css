@@ -490,6 +490,11 @@ body.admin-bar {
 	text-align: center;
 }
 
+/* "How I can help": the intro spans the full width of the service cards. */
+.home-services .section-header {
+	max-width: none;
+}
+
 .section-footer {
 	margin: 2.5rem 0 0;
 	text-align: center;
@@ -581,6 +586,15 @@ body.admin-bar {
 	margin-bottom: 2rem;
 }
 
+/* Blank lines in the Customizer become separate, spaced paragraphs. */
+.hero__subheading p {
+	margin: 0 0 0.85em;
+}
+
+.hero__subheading p:last-child {
+	margin-bottom: 0;
+}
+
 .hero--has-image .hero__heading,
 .hero--has-image .hero__subheading,
 .hero--has-image .button--ghost {
@@ -600,7 +614,62 @@ body.admin-bar {
 	display: grid;
 	grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
 	gap: clamp(2rem, 5vw, 4.5rem);
+	align-items: start; /* photo lines up with the top of the bio */
+}
+
+/* Desktop: the photo stays in view while a long bio is read. */
+@media (min-width: 861px) {
+	.home-about__media {
+		position: sticky;
+		top: calc(96px + var(--admin-bar-height));
+	}
+}
+
+/* Long bios are collapsed by assets/js/about-bio.js to about the photo's
+   height, fading out above a "Continue reading" button. */
+.home-about__bio {
+	position: relative;
+	overflow: hidden;
+}
+
+.home-about__bio > :last-child {
+	margin-bottom: 0;
+}
+
+.home-about__bio.is-collapsed::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 5rem;
+	background: linear-gradient(to bottom, transparent, var(--color-bg));
+	pointer-events: none;
+}
+
+.home-about__more {
+	display: inline-flex;
 	align-items: center;
+	min-height: 44px;
+	margin: 0.5rem 0 0.75rem;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--color-link);
+	font: inherit;
+	font-weight: 600;
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+	cursor: pointer;
+}
+
+.home-about__more:hover {
+	text-decoration-thickness: 2px;
+}
+
+.home-about__more + .text-link {
+	display: inline-block;
+	margin-left: 1.5rem;
 }
 
 .home-about__photo,
@@ -631,6 +700,83 @@ body.admin-bar {
 	padding: 0;
 }
 
+/* Services grid: fixed 1 / 2 / 3 columns so the theme knows how many
+   slots are left empty in the last row — the welcome card fills them. */
+.card-grid--services {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.card-grid__fill {
+	display: none; /* also hides it from screen readers when there's no gap */
+}
+
+@media (min-width: 640px) and (max-width: 999px) {
+	.card-grid--services {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.card-grid__fill--tablet {
+		display: block;
+	}
+}
+
+@media (min-width: 1000px) {
+	.card-grid--services {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.card-grid__fill--desktop-1,
+	.card-grid__fill--desktop-2 {
+		display: block;
+	}
+
+	.card-grid__fill--desktop-2 {
+		grid-column: span 2;
+	}
+
+	/* Two slots wide: text beside the button instead of stacked. */
+	.card-grid__fill--desktop-2 .welcome-card {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		text-align: left;
+	}
+}
+
+.welcome-card {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	gap: 1.25rem;
+	height: 100%;
+	padding: clamp(1.5rem, 3vw, 2.25rem);
+	border-radius: var(--radius);
+	background: var(--color-primary);
+	color: var(--color-on-primary);
+	box-shadow: var(--shadow);
+	--color-focus: var(--color-on-primary);
+}
+
+.welcome-card__title {
+	margin: 0 0 0.5rem;
+	color: inherit;
+}
+
+.welcome-card__text p {
+	margin: 0;
+	max-width: 32rem;
+}
+
+/* Inverted button: on-primary background, primary text — the same
+   contrast-checked pair as regular buttons, just swapped. */
+.welcome-card__button {
+	flex: 0 0 auto;
+	background: var(--color-on-primary);
+	border-color: var(--color-on-primary);
+	color: var(--color-primary);
+}
+
 .card {
 	position: relative;
 	display: flex;
@@ -656,6 +802,9 @@ body.admin-bar {
 }
 
 .card__body {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
 	padding: 1.5rem;
 }
 
@@ -687,6 +836,122 @@ body.admin-bar {
 
 .card__summary {
 	margin: 0;
+}
+
+/* "Read more" sits at the bottom of the card (lined up across the row) and
+   above the card's stretched title link so it stays clickable. */
+.card__more {
+	position: relative;
+	z-index: 2;
+	align-self: flex-start;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35em;
+	min-height: 44px;
+	margin-top: auto;
+	padding: 0.75rem 0 0;
+	border: 0;
+	background: none;
+	color: var(--color-link);
+	font: inherit;
+	font-weight: 600;
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+	cursor: pointer;
+}
+
+.card__more:hover {
+	text-decoration-thickness: 2px;
+}
+
+/* ---- Service overlay (native <dialog>) ---- */
+
+html:has(.service-dialog[open]) {
+	overflow: hidden; /* keep the page behind from scrolling */
+}
+
+.service-dialog {
+	width: min(44rem, calc(100% - 2rem));
+	max-height: min(85vh, 900px);
+	padding: 0;
+	border: 0;
+	border-radius: var(--radius);
+	background: var(--color-card-bg);
+	color: var(--color-card-text);
+	box-shadow: 0 24px 60px rgba(27, 42, 74, 0.3);
+	--color-link: var(--color-card-link);
+	--color-focus: var(--color-card-link);
+}
+
+.service-dialog::backdrop {
+	background: rgba(27, 42, 74, 0.55);
+}
+
+.service-dialog[open] {
+	animation: service-dialog-in 0.2s ease-out;
+}
+
+@keyframes service-dialog-in {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+}
+
+.service-dialog__panel {
+	position: relative;
+	max-height: inherit;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+
+.service-dialog__close {
+	position: sticky;
+	top: 0.75rem;
+	float: right;
+	z-index: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	margin: 0.75rem 0.75rem -44px 0;
+	border: 0;
+	border-radius: 50%;
+	background: var(--color-card-bg);
+	color: var(--color-card-heading);
+	box-shadow: var(--shadow);
+	cursor: pointer;
+}
+
+.service-dialog__media img {
+	width: 100%;
+	aspect-ratio: 3 / 1;
+	object-fit: cover;
+}
+
+.service-dialog__body {
+	padding: clamp(1.5rem, 4vw, 2.25rem);
+}
+
+.service-dialog__body h2 {
+	margin-right: 2.5rem; /* clear the close button */
+	color: var(--color-card-heading);
+}
+
+.service-dialog .entry-content {
+	padding: 0;
+	max-width: none;
+}
+
+.service-dialog__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 1rem 1.5rem;
+	margin-top: 1.75rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--color-border);
 }
 
 /* ---- Practice details ---- */

@@ -49,6 +49,10 @@ function annefpugh_assets() {
 	$uri = get_template_directory_uri();
 	wp_enqueue_style( 'annefpugh-main', $uri . '/assets/css/main.css', array(), annefpugh_asset_version( 'assets/css/main.css' ) );
 	wp_enqueue_script( 'annefpugh-navigation', $uri . '/assets/js/navigation.js', array(), annefpugh_asset_version( 'assets/js/navigation.js' ), array( 'strategy' => 'defer', 'in_footer' => true ) );
+	// Registered here, enqueued by template-parts/home/about.php (collapses a long bio).
+	wp_register_script( 'annefpugh-about-bio', $uri . '/assets/js/about-bio.js', array(), annefpugh_asset_version( 'assets/js/about-bio.js' ), array( 'strategy' => 'defer', 'in_footer' => true ) );
+	// Registered here, enqueued by template-parts/home/services.php ("Read more" overlays).
+	wp_register_script( 'annefpugh-service-dialogs', $uri . '/assets/js/service-dialogs.js', array(), annefpugh_asset_version( 'assets/js/service-dialogs.js' ), array( 'strategy' => 'defer', 'in_footer' => true ) );
 	// Registered here, enqueued by template-parts/home/cta.php only on pages that show it.
 	wp_register_script( 'annefpugh-callback-toggle', $uri . '/assets/js/callback-toggle.js', array(), annefpugh_asset_version( 'assets/js/callback-toggle.js' ), array( 'strategy' => 'defer', 'in_footer' => true ) );
 }

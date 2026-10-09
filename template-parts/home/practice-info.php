@@ -61,7 +61,7 @@ if ( ! $annefpugh_has_location && ! $annefpugh_has_sessions && ! $annefpugh_has_
 						<p><?php echo nl2br( esc_html( $annefpugh_fees ) ); ?></p>
 					<?php endif; ?>
 					<?php if ( $annefpugh_insurance ) : ?>
-						<p><?php echo nl2br( esc_html( $annefpugh_insurance ) ); ?></p>
+						<p><?php echo nl2br( wp_kses( $annefpugh_insurance, annefpugh_inline_allowed_html() ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- filtered by wp_kses(). ?></p>
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>

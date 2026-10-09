@@ -60,6 +60,11 @@ function annefpugh_defaults() {
 		'services_heading'     => __( 'How I can help', 'annefpugh' ),
 		'services_intro'       => '',
 		'services_count'       => 6,
+		'show_welcome_card'    => true,
+		'welcome_card_heading' => __( 'Not sure where to start?', 'annefpugh' ),
+		'welcome_card_text'    => __( 'You don\'t need to know which of these fits. Reach out, and we\'ll figure it out together.', 'annefpugh' ),
+		'callback_button_text' => __( 'Request a call back', 'annefpugh' ),
+		'callback_url'         => '',
 		'cta_heading'          => __( 'Ready to take the first step?', 'annefpugh' ),
 		'cta_text'             => __( 'Reach out for a free 15-minute consultation to see whether we\'re a good fit.', 'annefpugh' ),
 
@@ -108,6 +113,13 @@ function annefpugh_required_text( $key ) {
  * 988, 911, full US numbers like (555) 123-4567, and 741741 (as a text link).
  */
 function annefpugh_linkify_phone_numbers( $text ) {
+	return annefpugh_link_phone_numbers_in_text( esc_html( $text ) );
+}
+
+/**
+ * Wrap phone numbers in already-escaped text with tel:/sms: links.
+ */
+function annefpugh_link_phone_numbers_in_text( $escaped_text ) {
 	return preg_replace_callback(
 		'/(?<![\w$])(?:(?:\+?1[\s.\-]?)?\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4}|988|911|741741)(?![\w])/',
 		function ( $match ) {
@@ -115,8 +127,62 @@ function annefpugh_linkify_phone_numbers( $text ) {
 			$href   = '741741' === $digits ? 'sms:741741' : 'tel:' . $digits;
 			return '<a href="' . esc_attr( $href ) . '">' . $match[0] . '</a>';
 		},
-		esc_html( $text )
+		$escaped_text
 	);
+}
+
+/**
+ * Small HTML allowance for short text fields (footer crisis resources,
+ * Practice Info → Insurance): links plus light emphasis and line breaks.
+ */
+function annefpugh_inline_allowed_html() {
+	return array(
+		'a'      => array(
+			'href'   => true,
+			'target' => true,
+			'rel'    => true,
+			'title'  => true,
+		),
+		'strong' => array(),
+		'b'      => array(),
+		'em'     => array(),
+		'i'      => array(),
+		'br'     => array(),
+	);
+}
+
+/**
+ * Customizer sanitizer for the crisis resources: keeps the allowed HTML and
+ * the one-resource-per-line structure.
+ */
+function annefpugh_sanitize_crisis_items( $value ) {
+	return wp_kses( str_replace( array( "\r\n", "\r" ), "\n", (string) $value ), annefpugh_inline_allowed_html() );
+}
+
+/**
+ * One crisis resource line as safe HTML: the owner's links/emphasis are
+ * kept (filtered by wp_kses), and phone numbers in the plain text become
+ * tap-to-call links — but never inside a link the owner already wrote.
+ */
+function annefpugh_crisis_html( $text ) {
+	$html    = wp_kses( $text, annefpugh_inline_allowed_html() );
+	$parts   = preg_split( '/(<[^>]*>)/', $html, -1, PREG_SPLIT_DELIM_CAPTURE );
+	$in_link = 0;
+	$out     = '';
+
+	foreach ( $parts as $part ) {
+		if ( '' !== $part && '<' === $part[0] ) {
+			if ( preg_match( '/^<a[\s>]/i', $part ) ) {
+				++$in_link;
+			} elseif ( preg_match( '#^</a\s*>#i', $part ) ) {
+				$in_link = max( 0, $in_link - 1 );
+			}
+			$out .= $part;
+		} else {
+			$out .= $in_link ? $part : annefpugh_link_phone_numbers_in_text( $part );
+		}
+	}
+	return $out;
 }
 
 /**

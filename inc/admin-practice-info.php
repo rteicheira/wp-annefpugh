@@ -113,9 +113,10 @@ function annefpugh_practice_field_groups() {
 				),
 				'insurance'      => array(
 					'label'       => __( 'Insurance', 'annefpugh' ),
-					'type'        => 'textarea',
-					'rows'        => 3,
+					'type'        => 'textarea_html',
+					'rows'        => 4,
 					'placeholder' => __( 'In-network with Aetna and Cigna. Superbills available for out-of-network reimbursement.', 'annefpugh' ),
+					'help'        => __( 'You can add links with HTML, e.g. <a href="https://headway.co">Headway</a>, and <strong>bold</strong> or <em>italics</em>. Other HTML is removed.', 'annefpugh' ),
 				),
 			),
 		),
@@ -147,6 +148,9 @@ function annefpugh_practice_sanitize( $type, $value ) {
 			return esc_url_raw( $value );
 		case 'editor':
 			return wp_kses( $value, annefpugh_intro_allowed_html() );
+		case 'textarea_html':
+			// Plain textarea that may contain links/emphasis; line breaks are kept.
+			return wp_kses( str_replace( array( "\r\n", "\r" ), "\n", $value ), annefpugh_inline_allowed_html() );
 		case 'textarea':
 			return sanitize_textarea_field( $value );
 		default:
@@ -262,7 +266,7 @@ function annefpugh_render_practice_field( $key, $field ) {
 			$described, // phpcs:ignore WordPress.Security.EscapeOutput -- built from esc_attr above.
 			esc_html( $field['checkbox_label'] )
 		);
-	} elseif ( 'textarea' === $field['type'] ) {
+	} elseif ( in_array( $field['type'], array( 'textarea', 'textarea_html' ), true ) ) {
 		printf(
 			'<textarea id="%1$s" name="%1$s" rows="%2$d" class="large-text" placeholder="%3$s"%4$s>%5$s</textarea>',
 			esc_attr( $key ),

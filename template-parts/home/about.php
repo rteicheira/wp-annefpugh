@@ -22,7 +22,15 @@ $annefpugh_credentials = annefpugh_mod( 'therapist_credentials' );
 		<div class="home-about__text">
 			<p class="eyebrow"><?php esc_html_e( 'Meet your therapist', 'annefpugh' ); ?></p>
 			<h2 id="home-about-heading"><?php echo esc_html( annefpugh_therapist_name() ); ?><?php if ( $annefpugh_credentials ) : ?><span class="credentials">, <?php echo esc_html( $annefpugh_credentials ); ?></span><?php endif; ?></h2>
-			<?php echo annefpugh_therapist_intro_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- filtered by wp_kses() inside. ?>
+			<div class="home-about__bio" id="home-about-bio">
+				<?php echo annefpugh_therapist_intro_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- filtered by wp_kses() inside. ?>
+			</div>
+			<?php // Shown by assets/js/about-bio.js only when the bio is long enough to collapse. ?>
+			<button type="button" class="home-about__more" aria-expanded="false" aria-controls="home-about-bio" hidden
+				data-more="<?php esc_attr_e( 'Continue reading', 'annefpugh' ); ?>" data-less="<?php esc_attr_e( 'Show less', 'annefpugh' ); ?>">
+				<?php esc_html_e( 'Continue reading', 'annefpugh' ); ?>
+			</button>
+			<?php wp_enqueue_script( 'annefpugh-about-bio' ); ?>
 			<?php if ( $annefpugh_about_url ) : ?>
 				<a class="text-link" href="<?php echo esc_url( $annefpugh_about_url ); ?>"><?php esc_html_e( 'More about my approach', 'annefpugh' ); ?></a>
 			<?php endif; ?>

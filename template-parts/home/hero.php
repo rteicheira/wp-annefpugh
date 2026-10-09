@@ -35,7 +35,7 @@ $annefpugh_mark     = annefpugh_site_icon( 'hero', 280, $annefpugh_icon_alt );
 		<div class="hero__text">
 		<h1 id="hero-heading" class="hero__heading"><?php echo esc_html( annefpugh_mod( 'hero_heading' ) ); ?></h1>
 		<?php if ( annefpugh_mod( 'hero_subheading' ) ) : ?>
-			<p class="hero__subheading"><?php echo esc_html( annefpugh_mod( 'hero_subheading' ) ); ?></p>
+			<div class="hero__subheading"><?php echo wpautop( esc_html( annefpugh_mod( 'hero_subheading' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped before wpautop (blank line → new paragraph). ?></div>
 		<?php endif; ?>
 		<div class="hero__actions">
 			<?php if ( $annefpugh_contact_url ) : ?>

@@ -139,7 +139,7 @@ function annefpugh_customize_register( WP_Customize_Manager $wp_customize ) {
 	// Hero.
 	annefpugh_add_field( $wp_customize, 'hero_image', 'annefpugh_hero', 'absint', array( 'type' => 'media', 'label' => __( 'Hero image', 'annefpugh' ), 'description' => __( 'Wide landscape photo, at least 1920×1080. Leave empty for a solid color.', 'annefpugh' ) ) );
 	annefpugh_add_field( $wp_customize, 'hero_heading', 'annefpugh_hero', 'sanitize_text_field', array( 'label' => __( 'Heading', 'annefpugh' ) ) );
-	annefpugh_add_field( $wp_customize, 'hero_subheading', 'annefpugh_hero', 'sanitize_textarea_field', array( 'type' => 'textarea', 'label' => __( 'Subheading', 'annefpugh' ) ) );
+	annefpugh_add_field( $wp_customize, 'hero_subheading', 'annefpugh_hero', 'sanitize_textarea_field', array( 'type' => 'textarea', 'label' => __( 'Subheading', 'annefpugh' ), 'description' => __( 'Leave a blank line between paragraphs to space them apart.', 'annefpugh' ) ) );
 	annefpugh_add_field( $wp_customize, 'hero_button_text', 'annefpugh_hero', 'sanitize_text_field', array( 'label' => __( 'Button text (links to Contact page)', 'annefpugh' ) ) );
 
 	// Therapist and practice details live on the Practice Info admin screen (inc/admin-practice-info.php).
@@ -158,8 +158,34 @@ function annefpugh_customize_register( WP_Customize_Manager $wp_customize ) {
 	annefpugh_add_field( $wp_customize, 'services_heading', 'annefpugh_homepage', 'sanitize_text_field', array( 'label' => __( 'Services heading', 'annefpugh' ) ) );
 	annefpugh_add_field( $wp_customize, 'services_intro', 'annefpugh_homepage', 'sanitize_textarea_field', array( 'type' => 'textarea', 'label' => __( 'Services introduction', 'annefpugh' ) ) );
 	annefpugh_add_field( $wp_customize, 'services_count', 'annefpugh_homepage', 'annefpugh_sanitize_services_count', array( 'type' => 'number', 'label' => __( 'Number of services on the homepage', 'annefpugh' ), 'input_attrs' => array( 'min' => 1, 'max' => 12 ) ) );
+	annefpugh_add_field(
+		$wp_customize,
+		'show_welcome_card',
+		'annefpugh_homepage',
+		'annefpugh_sanitize_checkbox',
+		array(
+			'type'        => 'checkbox',
+			'label'       => __( 'Fill empty spaces in the services grid with a welcome card', 'annefpugh' ),
+			'description' => __( 'When your services don\'t fill the last row, the gap becomes a card inviting visitors to reach out. It appears only when there\'s a gap, and resizes to fit it.', 'annefpugh' ),
+		)
+	);
+	annefpugh_add_field( $wp_customize, 'welcome_card_heading', 'annefpugh_homepage', 'sanitize_text_field', array( 'label' => __( 'Welcome card heading', 'annefpugh' ) ) );
+	annefpugh_add_field( $wp_customize, 'welcome_card_text', 'annefpugh_homepage', 'sanitize_textarea_field', array( 'type' => 'textarea', 'label' => __( 'Welcome card text', 'annefpugh' ), 'description' => __( 'The card\'s button uses the same text and destination as the header button.', 'annefpugh' ) ) );
 	annefpugh_add_field( $wp_customize, 'cta_heading', 'annefpugh_homepage', 'sanitize_text_field', array( 'label' => __( 'Closing call-to-action heading', 'annefpugh' ) ) );
 	annefpugh_add_field( $wp_customize, 'cta_text', 'annefpugh_homepage', 'sanitize_textarea_field', array( 'type' => 'textarea', 'label' => __( 'Closing call-to-action text', 'annefpugh' ) ) );
+	annefpugh_add_field( $wp_customize, 'callback_button_text', 'annefpugh_homepage', 'sanitize_text_field', array( 'label' => __( 'Call-back button text', 'annefpugh' ) ) );
+	annefpugh_add_field(
+		$wp_customize,
+		'callback_url',
+		'annefpugh_homepage',
+		'esc_url_raw',
+		array(
+			'type'        => 'url',
+			'label'       => __( 'Call-back button link (optional)', 'annefpugh' ),
+			'description' => __( 'Send the button to another site instead, e.g. your online booking page. It opens in a new tab. Leave blank to open the call-back form.', 'annefpugh' ),
+			'input_attrs' => array( 'placeholder' => 'https://' ),
+		)
+	);
 
 	// Crisis & safety.
 	annefpugh_add_field(
@@ -179,7 +205,18 @@ function annefpugh_customize_register( WP_Customize_Manager $wp_customize ) {
 	$crisis_fields = array(
 		'crisis_bar_text'     => array( 'text', __( 'Crisis bar text (top of page)', 'annefpugh' ), '' ),
 		'crisis_heading'      => array( 'text', __( 'Footer crisis heading', 'annefpugh' ), '' ),
-		'crisis_items'        => array( 'textarea', __( 'Footer crisis resources', 'annefpugh' ), __( 'One resource per line. Each line becomes a bullet point.', 'annefpugh' ) ),
+		'crisis_items'        => array(
+			'textarea',
+			__( 'Footer crisis resources', 'annefpugh' ),
+			// The Customizer prints descriptions as HTML, so the examples are escaped to show as code.
+			sprintf(
+				/* translators: 1: example link HTML, 2: example bold HTML */
+				__( 'One resource per line. Each line becomes a bullet point. You can add links with HTML, e.g. %1$s, and bold or italics, e.g. %2$s. Other HTML is removed. Phone numbers outside links still become tap-to-call links.', 'annefpugh' ),
+				'<code>' . esc_html( '<a href="https://988lifeline.org">988lifeline.org</a>' ) . '</code>',
+				'<code>' . esc_html( '<strong>24/7</strong>' ) . '</code>'
+			),
+			'annefpugh_sanitize_crisis_items',
+		),
 		'crisis_disclaimer'   => array( 'text', __( 'Footer note', 'annefpugh' ), __( 'Shown below the resources.', 'annefpugh' ) ),
 		'contact_form_notice' => array( 'textarea', __( 'Contact form safety note', 'annefpugh' ), __( 'Shown above both forms: the Contact page form and the "Request a call back" form on the homepage and Services page.', 'annefpugh' ) ),
 	);
@@ -188,7 +225,7 @@ function annefpugh_customize_register( WP_Customize_Manager $wp_customize ) {
 			$wp_customize,
 			$id,
 			'annefpugh_safety',
-			'textarea' === $field[0] ? 'sanitize_textarea_field' : 'sanitize_text_field',
+			isset( $field[3] ) ? $field[3] : ( 'textarea' === $field[0] ? 'sanitize_textarea_field' : 'sanitize_text_field' ),
 			array(
 				'type'        => $field[0],
 				'label'       => $field[1],
