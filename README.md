@@ -2,6 +2,8 @@
 
 A warm, accessible WordPress theme for a single-provider therapy practice. You set everything from the dashboard: colors, images, practice details, and services. No code changes needed.
 
+[![CodeQL](https://github.com/rteicheira/wp-annefpugh/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/rteicheira/wp-annefpugh/actions/workflows/github-code-scanning/codeql) [![PHPMD](https://github.com/rteicheira/wp-annefpugh/actions/workflows/phpmd.yml/badge.svg)](https://github.com/rteicheira/wp-annefpugh/actions/workflows/phpmd.yml)
+
 ## Site structure (5 pages + legal)
 
 | Page | Template | Purpose |
@@ -135,7 +137,3 @@ audits/                       Code reviews — never deployed (see deployafp.sh)
     - there's no users sitemap
     - the login page says "username, email address, or password is incorrect" without saying which
   - **No blog pages:** search results and author, category, tag and date archives return a proper 404, and `/feed/` redirects to the homepage. A no-blog site has nothing to show there.
-
-## Deploying
-
-Use `~/scripts/deployafp.sh`. It mirrors this folder to the server with `rsync --delete` and never publishes `.git`, `audits/`, or `*.md` files. Run `deployafp.sh -n` first to preview the changes. Asset URLs are versioned by file modification time, so visitors always get the latest CSS/JS without a manual version bump.
