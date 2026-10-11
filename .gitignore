@@ -1,0 +1,4 @@
+/audits/*
+/.github/*
+.cspell.json
+/tests/*

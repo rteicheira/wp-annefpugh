@@ -28,6 +28,7 @@ inc/
   template-functions.php      Defaults, annefpugh_mod(), contrast helpers, client IP, asset versions
   setup.php                   Theme supports, image sizes, menus, assets
   disable-comments.php        Turns comments off site-wide (forms, REST, XML-RPC, feeds, admin)
+  hardening.php               XML-RPC off, usernames kept private, no blog archives/search/feeds
   post-types.php              "Service" post type
   customizer.php              Customizer settings (design, homepage wording, page links)
   admin-practice-info.php     "Practice Info" admin screen, Dashboard box, toolbar link
@@ -85,7 +86,7 @@ audits/                       Code reviews — never deployed (see deployafp.sh)
 ## Accessibility
 
 - Skip link, landmark regions, one `h1` per page, labelled `nav`/`section` regions.
-- Keyboard-operable mobile menu (`aria-expanded`, Escape closes it and returns focus to the toggle).
+- Keyboard-operable mobile menu (`aria-expanded`, Escape closes it and returns focus to the toggle). It also closes when a menu link is followed (so same-page links don't leave it covering the section) or on a click outside it.
 - Visible focus outlines everywhere, at least 3:1 against whatever background they're on (footer and crisis bar included); form field borders 3.9:1; touch targets of at least 44px.
 - **Automatic contrast:** pick any colors. For each area (page, alternate sections, header, cards/forms, footer), the theme checks every text, heading, link, and focus-ring color against that area's background and darkens or lightens it, keeping the hue, until it meets WCAG AA (4.5:1 for text, 3:1 for focus rings). Button, footer, and hero text are set to white or near-black. Tested against deliberately bad combinations: all 15 pairings pass every time.
 - Keep the hero overlay at 40% or higher when using a photo.
@@ -109,7 +110,7 @@ audits/                       Code reviews — never deployed (see deployafp.sh)
   - **Checks:** a strictness score for reCAPTCHA v3; tokens must be issued for this site's domain (override with the `annefpugh_captcha_hostname` filter) and for the same form.
   - **Loading:** the provider's script only loads on pages with a protected form, and (except reCAPTCHA v2) only once a visitor starts filling it in.
   - **Contact messages are never lost.** If the visitor's browser blocks the check, or the provider can't be reached, the message is delivered with **[Unverified]** at the start of the subject. Only messages the provider positively flags are rejected.
-  - **Login is stricter.** A login or password reset without a completed check is refused, so bots can't skip it. Only an unreachable provider lets a login through, so an outage can't lock you out. XML-RPC and application-password logins aren't affected.
+  - **Login is stricter.** A login or password reset without a completed check is refused, so bots can't skip it. Only an unreachable provider lets a login through, so an outage can't lock you out. Application-password logins aren't affected. XML-RPC is switched off entirely (see *Hardening* below), so it can't be used to get around the check.
   - **Test first:** after saving, open the login page in a private window and make sure you can still log in.
   - **Locked out?** Add `define( 'ANNEFPUGH_SPAM_PROTECTION_OFF', true );` to `wp-config.php`, log in, fix the settings, then remove the line. While it's set, the settings page shows a warning that protection is switched off.
   - Both services receive visitor data, so mention the one you use in the Privacy Policy.
@@ -124,6 +125,15 @@ audits/                       Code reviews — never deployed (see deployafp.sh)
   - Comments and Settings → Discussion screens hidden, and their direct URLs redirect to the Dashboard
 
   Saved WordPress settings aren't changed, so switching themes restores the defaults.
+- **Hardening** (`inc/hardening.php`):
+  - **XML-RPC is off.** `xmlrpc.php` answers with 403, and no methods are available, so bots can't use it to guess passwords around the login check. Nothing on this site uses it: the block editor uses the REST API. If a service ever needs XML-RPC (e.g. the Jetpack app), it will stop working until this is removed.
+  - **Your username stays private:**
+    - the REST user list (`/wp-json/wp/v2/users`) is only available when logged in
+    - `?author=1` and `/author/…` pages return 404
+    - oEmbed data has no author
+    - there's no users sitemap
+    - the login page says "username, email address, or password is incorrect" without saying which
+  - **No blog pages:** search results and author, category, tag and date archives return a proper 404, and `/feed/` redirects to the homepage. A no-blog site has nothing to show there.
 
 ## Deploying
 
