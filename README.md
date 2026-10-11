@@ -105,7 +105,7 @@ audits/                       Code reviews — never deployed (see deployafp.sh)
   - **Rate limit:** 5 messages per visitor per 10 minutes.
   - **Behind Cloudflare:** add `add_filter( 'annefpugh_trust_cloudflare_ip', '__return_true' );` so the limit uses the real visitor IP. Without it, the `CF-Connecting-IP` header is ignored, because anyone can fake it when the site isn't behind Cloudflare.
 - **Cloudflare Turnstile or Google reCAPTCHA** (optional), under **Settings → Spam Protection**. The layout and wording match the russteicheira theme.
-  - **Protect:** contact forms (Contact page and "Request a call back"), log in / password reset / registration, and comments (comments are off on this site; this applies if they're turned back on).
+  - **Protect:** *Comment boxes* (comments are off on this site; this applies if they're turned back on), *Contact forms* (the Contact page and "Request a call back"), and *Log in, password reset, and registration*.
   - **Provider:** Turnstile (recommended) or reCAPTCHA v3 (invisible) / v2 (checkbox). Each keeps its own keys, so you can switch back and forth. Secrets are never shown again after saving.
   - **Checks:** a strictness score for reCAPTCHA v3; tokens must be issued for this site's domain (override with the `annefpugh_captcha_hostname` filter) and for the same form.
   - **Loading:** the provider's script only loads on pages with a protected form, and (except reCAPTCHA v2) only once a visitor starts filling it in.

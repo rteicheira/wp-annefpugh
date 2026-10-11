@@ -176,9 +176,9 @@ function annefpugh_captcha_render_settings() {
 					<td>
 						<fieldset>
 							<legend class="screen-reader-text"><?php esc_html_e( 'Forms to protect', 'annefpugh' ); ?></legend>
-							<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[protect_contact]" value="1" <?php checked( $s['protect_contact'] ); ?>> <?php esc_html_e( 'Contact forms (the Contact page and "Request a call back")', 'annefpugh' ); ?></label><br>
-							<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[protect_login]" value="1" <?php checked( $s['protect_login'] ); ?>> <?php esc_html_e( 'Log in, password reset, and registration', 'annefpugh' ); ?></label><br>
-							<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[protect_comments]" value="1" <?php checked( $s['protect_comments'] ); ?>> <?php esc_html_e( 'Comments', 'annefpugh' ); ?></label>
+							<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[protect_comments]" value="1" <?php checked( $s['protect_comments'] ); ?>> <?php esc_html_e( 'Comment boxes', 'annefpugh' ); ?></label><br>
+							<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[protect_contact]" value="1" <?php checked( $s['protect_contact'] ); ?>> <?php esc_html_e( 'Contact forms', 'annefpugh' ); ?></label><br>
+							<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[protect_login]" value="1" <?php checked( $s['protect_login'] ); ?>> <?php esc_html_e( 'Log in, password reset, and registration', 'annefpugh' ); ?></label>
 							<p class="description"><?php esc_html_e( 'Comments are turned off on this site; this applies if they\'re ever turned back on. Logged-in users are never checked on comments.', 'annefpugh' ); ?></p>
 						</fieldset>
 					</td>
