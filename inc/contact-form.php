@@ -5,7 +5,8 @@
  *
  * Spam defenses, in order: honeypot field, signed form timestamp (catches
  * instant bot submissions; unlike a nonce it never expires, so it works on
- * cached pages), per-visitor rate limit, optional reCAPTCHA.
+ * cached pages), per-visitor rate limit, optional Turnstile/reCAPTCHA
+ * (inc/spam-protection.php).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -80,7 +81,7 @@ function annefpugh_contact_field( $key ) {
 }
 
 function annefpugh_handle_contact_form() {
-	// phpcs:disable WordPress.Security.NonceVerification -- public, logged-out form; protected by the signed timestamp, rate limit, and reCAPTCHA instead of a nonce (nonces expire on cached pages).
+	// phpcs:disable WordPress.Security.NonceVerification -- public, logged-out form; protected by the signed timestamp, rate limit, and Turnstile/reCAPTCHA instead of a nonce (nonces expire on cached pages).
 	$base    = wp_get_referer() ? remove_query_arg( array( 'contact', 'form' ), wp_get_referer() ) : home_url( '/' );
 	$form_id = sanitize_key( annefpugh_contact_field( 'annefpugh_form' ) );
 	$form_id = '' !== $form_id ? $form_id : 'contact-form';
@@ -109,8 +110,8 @@ function annefpugh_handle_contact_form() {
 		annefpugh_contact_redirect( 'busy', $base, $form_id );
 	}
 
-	// 4. reCAPTCHA (when configured).
-	$captcha = annefpugh_recaptcha_verify( sanitize_text_field( annefpugh_contact_field( 'g-recaptcha-response' ) ) );
+	// 4. Turnstile / reCAPTCHA (Settings → Spam Protection, when configured).
+	$captcha = annefpugh_captcha_protects( 'contact' ) ? annefpugh_captcha_verify( annefpugh_captcha_posted_token(), 'contact' ) : 'pass';
 	if ( 'fail' === $captcha ) {
 		annefpugh_contact_redirect( 'spam', $base, $form_id );
 	}
@@ -158,7 +159,7 @@ function annefpugh_handle_contact_form() {
 	$lines[] = $message;
 	if ( 'unverified' === $captcha ) {
 		$lines[] = '';
-		$lines[] = '(Spam protection couldn\'t check this message — the sender\'s browser may block Google. It\'s probably a real person, but use your judgment.)';
+		$lines[] = '(Spam protection couldn\'t check this message — the sender\'s browser may block the security check. It\'s probably a real person, but use your judgment.)';
 	}
 
 	// wp_mail() splits Reply-To on commas, so strip address-syntax characters from the name.

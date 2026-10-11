@@ -26,12 +26,13 @@ page-templates/
   template-contact.php        "Contact" page template
 inc/
   template-functions.php      Defaults, annefpugh_mod(), contrast helpers, client IP, asset versions
-  setup.php                   Theme supports, image sizes, menus, assets, comments disabled
+  setup.php                   Theme supports, image sizes, menus, assets
+  disable-comments.php        Turns comments off site-wide (forms, REST, XML-RPC, feeds, admin)
   post-types.php              "Service" post type
   customizer.php              Customizer settings (design, homepage wording, page links)
   admin-practice-info.php     "Practice Info" admin screen, Dashboard box, toolbar link
   admin-service-order.php     Services → Change Order (drag-and-drop + Move up/down)
-  recaptcha.php               Settings → Spam Protection (Google reCAPTCHA)
+  spam-protection.php         Settings → Spam Protection (Turnstile / reCAPTCHA: forms, login, comments)
   custom-css.php              Customizer colors → contrast-checked CSS custom properties
   contact-form.php            Form handler (honeypot, signed timestamp, rate limit, reCAPTCHA, wp_mail)
   schema.php                  MedicalBusiness JSON-LD (skipped if an SEO plugin is active)
@@ -102,17 +103,27 @@ audits/                       Code reviews — never deployed (see deployafp.sh)
   - **Signed timestamp in each form:** rejects anything submitted faster than a person can type. Unlike a WordPress nonce it never expires, so forms keep working on cached pages.
   - **Rate limit:** 5 messages per visitor per 10 minutes.
   - **Behind Cloudflare:** add `add_filter( 'annefpugh_trust_cloudflare_ip', '__return_true' );` so the limit uses the real visitor IP. Without it, the `CF-Connecting-IP` header is ignored, because anyone can fake it when the site isn't behind Cloudflare.
-- **Google reCAPTCHA** (optional), under **Settings → Spam Protection**:
-  - v3 (invisible, recommended for accessibility) or v2 "I'm not a robot" checkbox
-  - site key and secret key (the secret is never shown again after saving)
-  - a strictness score for v3, and a check that the token was issued for this site's domain (override with the `annefpugh_recaptcha_hostname` filter)
-  - Google's script only loads on pages with a form, and for v3 only once a visitor starts typing.
-  - **Messages are never lost because of Google.** If a visitor's browser blocks Google, or Google can't be reached, the message is still delivered but its subject starts with **[Unverified]**. Only messages Google positively flags as bots are rejected.
-  - reCAPTCHA sends visitor data to Google, so mention it in the Privacy Policy.
+- **Cloudflare Turnstile or Google reCAPTCHA** (optional), under **Settings → Spam Protection**. The layout and wording match the russteicheira theme.
+  - **Protect:** contact forms (Contact page and "Request a call back"), log in / password reset / registration, and comments (comments are off on this site; this applies if they're turned back on).
+  - **Provider:** Turnstile (recommended) or reCAPTCHA v3 (invisible) / v2 (checkbox). Each keeps its own keys, so you can switch back and forth. Secrets are never shown again after saving.
+  - **Checks:** a strictness score for reCAPTCHA v3; tokens must be issued for this site's domain (override with the `annefpugh_captcha_hostname` filter) and for the same form.
+  - **Loading:** the provider's script only loads on pages with a protected form, and (except reCAPTCHA v2) only once a visitor starts filling it in.
+  - **Contact messages are never lost.** If the visitor's browser blocks the check, or the provider can't be reached, the message is delivered with **[Unverified]** at the start of the subject. Only messages the provider positively flags are rejected.
+  - **Login is stricter.** A login or password reset without a completed check is refused, so bots can't skip it. Only an unreachable provider lets a login through, so an outage can't lock you out. XML-RPC and application-password logins aren't affected.
+  - **Test first:** after saving, open the login page in a private window and make sure you can still log in.
+  - **Locked out?** Add `define( 'ANNEFPUGH_SPAM_PROTECTION_OFF', true );` to `wp-config.php`, log in, fix the settings, then remove the line. While it's set, the settings page shows a warning that protection is switched off.
+  - Both services receive visitor data, so mention the one you use in the Privacy Policy.
 - Field lengths are enforced on the server, and failed emails are logged to the PHP error log.
 - The contact forms ask visitors not to send sensitive health details. It sends via `wp_mail()` and stores nothing in the database. It's not a HIPAA-compliant intake — use a proper client portal for that.
 - No external fonts or scripts are loaded, so visitors' data isn't sent to third parties.
-- Comments are disabled site-wide, including comment feeds and the admin-bar comments item.
+- **Comments are off everywhere** (`inc/disable-comments.php`):
+  - closed on all content, with new content defaulting to closed
+  - comment form handler, REST API comment routes, XML-RPC pingbacks and comment methods, and the `X-Pingback` header all removed
+  - comment feeds redirect home
+  - Recent Comments widget removed
+  - Comments and Settings → Discussion screens hidden, and their direct URLs redirect to the Dashboard
+
+  Saved WordPress settings aren't changed, so switching themes restores the defaults.
 
 ## Deploying
 

@@ -84,31 +84,3 @@ function annefpugh_anchor_menu_item_attributes( $atts, $item ) {
 	return $atts;
 }
 add_filter( 'nav_menu_link_attributes', 'annefpugh_anchor_menu_item_attributes', 10, 2 );
-
-/**
- * No blog on a single-provider site: turn comments off everywhere.
- */
-function annefpugh_disable_comments() {
-	foreach ( get_post_types() as $post_type ) {
-		remove_post_type_support( $post_type, 'comments' );
-		remove_post_type_support( $post_type, 'trackbacks' );
-	}
-}
-add_action( 'init', 'annefpugh_disable_comments', 100 );
-add_filter( 'comments_open', '__return_false', 20 );
-add_filter( 'pings_open', '__return_false', 20 );
-add_filter( 'comments_array', '__return_empty_array', 10 );
-
-function annefpugh_remove_comments_menu() {
-	remove_menu_page( 'edit-comments.php' );
-}
-add_action( 'admin_menu', 'annefpugh_remove_comments_menu' );
-
-function annefpugh_remove_comments_admin_bar( WP_Admin_Bar $admin_bar ) {
-	$admin_bar->remove_node( 'comments' );
-}
-add_action( 'admin_bar_menu', 'annefpugh_remove_comments_admin_bar', 999 );
-
-// No comment feeds to advertise.
-add_filter( 'feed_links_show_comments_feed', '__return_false' );
-remove_action( 'wp_head', 'feed_links_extra', 3 );

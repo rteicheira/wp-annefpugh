@@ -64,7 +64,7 @@ $annefpugh_messages = array(
 		<?php echo annefpugh_linkify_phone_numbers( annefpugh_required_text( 'contact_form_notice' ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside. ?>
 	</p>
 
-	<form class="contact-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>"<?php echo annefpugh_recaptcha_form_attributes(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside. ?>>
+	<form class="contact-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 		<input type="hidden" name="action" value="annefpugh_contact">
 		<input type="hidden" name="annefpugh_form" value="<?php echo esc_attr( $annefpugh_form_id ); ?>">
 		<input type="hidden" name="annefpugh_variant" value="<?php echo esc_attr( $annefpugh_quick ? 'quick' : 'full' ); ?>">
@@ -111,7 +111,7 @@ $annefpugh_messages = array(
 			<textarea id="<?php echo esc_attr( $annefpugh_field( 'message' ) ); ?>" name="annefpugh_message" rows="<?php echo $annefpugh_quick ? 4 : 6; ?>" required aria-required="true" maxlength="2000"></textarea>
 		</div>
 
-		<?php annefpugh_recaptcha_form_fields(); ?>
+		<?php echo annefpugh_captcha_field_html( 'contact' ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside. ?>
 
 		<p class="form-required-note"><?php esc_html_e( '* Required', 'annefpugh' ); ?></p>
 		<button class="button button--large" type="submit">

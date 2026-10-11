@@ -1171,12 +1171,33 @@ html:has(.service-dialog[open]) {
 	margin: 0;
 }
 
-.form-recaptcha-note {
+/* Spam protection (inc/spam-protection.php): Turnstile/reCAPTCHA widget slot,
+   "complete the check" message, and Google's required attribution. */
+.afp-captcha {
+	display: contents;
+}
+
+.afp-captcha__widget:empty {
+	display: none;
+}
+
+.afp-captcha__msg {
+	margin: 0;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	color: #8a1f1f;
+}
+
+.afp-captcha__note {
 	margin: 0;
 	font-size: 0.8125rem;
 }
 
-/* Google allows hiding the floating v3 badge when the attribution text is shown. */
+.afp-captcha__note a {
+	color: inherit;
+}
+
+/* Google allows hiding the floating v3 badge when .afp-captcha__note is shown instead. */
 .grecaptcha-badge {
 	visibility: hidden;
 }
