@@ -1322,6 +1322,14 @@ html:has(.service-dialog[open]) {
 	margin: 0;
 }
 
+/* Developer credit: its own small, centered line under the bottom row. Kept
+   at full footer text color (not faded) so it stays readable on any footer color. */
+.footer-credit {
+	margin: 1.25rem 0 0;
+	font-size: 0.8125rem;
+	text-align: center;
+}
+
 /* ---- Responsive ---- */
 
 @media (max-width: 860px) {

@@ -68,7 +68,8 @@ audits/                       Code reviews — never deployed (see deployafp.sh)
    - *Site Identity*: site title, logo, site icon
    - *Colors*: page background plus 9 theme colors (primary, secondary, body text, headings, alternate sections, header, cards/forms, footer, hero overlay) and the hero overlay strength
    - *Background Image*: optional site-wide background image
-   - *Practice Theme Options →* Hero, Homepage Sections, Crisis & Safety, Page Links
+   - *Practice Theme Options →* Hero, Homepage Sections, Crisis & Safety, Footer, Page Links
+   - *Footer*: the website credit, a small centered line at the very bottom of every page ("Developed & maintained by Russ Teicheira ↗"). You can turn it off, and change the wording, name, and link (it opens in a new tab). Blank wording falls back to "Developed & maintained by"; a blank name hides the line.
    - Under *Page Links*, choose your About, Services, and Contact pages. The buttons and links throughout the site use these.
 7. **Appearance → Menus:** assign *Primary Menu*, *Footer Quick Links*, and *Footer Legal Links*. The legal menu falls back to your designated Privacy Policy page if left empty.
 

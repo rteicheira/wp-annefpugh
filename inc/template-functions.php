@@ -83,6 +83,12 @@ function annefpugh_defaults() {
 		'crisis_disclaimer'    => __( 'This website, email, and contact form are not monitored for emergencies.', 'annefpugh' ),
 		'contact_form_notice'  => __( 'Please don\'t include sensitive health details in this form — we can discuss those privately. This form is not monitored for emergencies; if you are in crisis, call or text 988.', 'annefpugh' ),
 
+		// Footer: developer credit.
+		'show_dev_credit'      => true,
+		'dev_credit_text'      => __( 'Developed & maintained by', 'annefpugh' ),
+		'dev_credit_name'      => 'Russ Teicheira',
+		'dev_credit_url'       => 'https://russteicheira.net',
+
 		// Page links.
 		'page_about'           => 0,
 		'page_services'        => 0,

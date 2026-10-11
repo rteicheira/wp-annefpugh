@@ -64,6 +64,7 @@ function annefpugh_customize_register( WP_Customize_Manager $wp_customize ) {
 		'annefpugh_hero'      => __( 'Homepage: Hero', 'annefpugh' ),
 		'annefpugh_homepage'  => __( 'Homepage: Sections', 'annefpugh' ),
 		'annefpugh_safety'    => __( 'Crisis & Safety', 'annefpugh' ),
+		'annefpugh_footer'    => __( 'Footer', 'annefpugh' ),
 		'annefpugh_pages'     => __( 'Page Links', 'annefpugh' ),
 	);
 	foreach ( $sections as $id => $title ) {
@@ -233,6 +234,32 @@ function annefpugh_customize_register( WP_Customize_Manager $wp_customize ) {
 			)
 		);
 	}
+
+	// Footer: developer credit (a small line at the very bottom of every page).
+	annefpugh_add_field(
+		$wp_customize,
+		'show_dev_credit',
+		'annefpugh_footer',
+		'annefpugh_sanitize_checkbox',
+		array(
+			'type'  => 'checkbox',
+			'label' => __( 'Show the website credit at the bottom of every page', 'annefpugh' ),
+		)
+	);
+	annefpugh_add_field( $wp_customize, 'dev_credit_text', 'annefpugh_footer', 'sanitize_text_field', array( 'label' => __( 'Credit wording', 'annefpugh' ), 'description' => __( 'Shown before the name. Leave blank for "Developed & maintained by".', 'annefpugh' ) ) );
+	annefpugh_add_field( $wp_customize, 'dev_credit_name', 'annefpugh_footer', 'sanitize_text_field', array( 'label' => __( 'Name', 'annefpugh' ), 'description' => __( 'The person or company who built and looks after the website. Leave blank to hide the credit.', 'annefpugh' ) ) );
+	annefpugh_add_field(
+		$wp_customize,
+		'dev_credit_url',
+		'annefpugh_footer',
+		'esc_url_raw',
+		array(
+			'type'        => 'url',
+			'label'       => __( 'Link (optional)', 'annefpugh' ),
+			'description' => __( 'The name links here and opens in a new tab. Leave blank for no link.', 'annefpugh' ),
+			'input_attrs' => array( 'placeholder' => 'https://' ),
+		)
+	);
 
 	// Page links.
 	$page_links = array(

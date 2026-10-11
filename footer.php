@@ -9,6 +9,8 @@ $annefpugh_phone   = annefpugh_mod( 'phone' );
 $annefpugh_email   = annefpugh_public_email();
 $annefpugh_address = annefpugh_mod( 'address' );
 $annefpugh_license = annefpugh_mod( 'license' );
+$annefpugh_credit  = trim( (string) annefpugh_mod( 'dev_credit_name' ) );
+$annefpugh_credit  = annefpugh_mod( 'show_dev_credit' ) ? $annefpugh_credit : '';
 ?>
 </main>
 
@@ -79,6 +81,17 @@ $annefpugh_license = annefpugh_mod( 'license' );
 				<p><?php echo esc_html( $annefpugh_license ); ?></p>
 			<?php endif; ?>
 		</div>
+
+		<?php if ( '' !== $annefpugh_credit ) : ?>
+			<p class="footer-credit">
+				<?php echo esc_html( annefpugh_required_text( 'dev_credit_text' ) ); ?>
+				<?php if ( annefpugh_mod( 'dev_credit_url' ) ) : ?>
+					<a href="<?php echo esc_url( annefpugh_mod( 'dev_credit_url' ) ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $annefpugh_credit ); ?><span aria-hidden="true"> &#8599;</span><span class="screen-reader-text"> <?php esc_html_e( '(opens in a new tab)', 'annefpugh' ); ?></span></a>
+				<?php else : ?>
+					<?php echo esc_html( $annefpugh_credit ); ?>
+				<?php endif; ?>
+			</p>
+		<?php endif; ?>
 	</div>
 </footer>
 
