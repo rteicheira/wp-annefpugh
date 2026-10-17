@@ -68,14 +68,9 @@ $annefpugh_messages = array(
 		<input type="hidden" name="action" value="annefpugh_contact">
 		<input type="hidden" name="annefpugh_form" value="<?php echo esc_attr( $annefpugh_form_id ); ?>">
 		<input type="hidden" name="annefpugh_variant" value="<?php echo esc_attr( $annefpugh_quick ? 'quick' : 'full' ); ?>">
-		<input type="hidden" name="annefpugh_ts" value="<?php echo esc_attr( annefpugh_form_token() ); ?>">
 		<?php wp_referer_field(); ?>
 
-		<?php // Spam trap: hidden from people; deliberately not named like anything browsers autofill. ?>
-		<div class="form-field form-field--hp" aria-hidden="true">
-			<label for="<?php echo esc_attr( $annefpugh_field( 'extra' ) ); ?>">Leave this field empty</label>
-			<input type="text" id="<?php echo esc_attr( $annefpugh_field( 'extra' ) ); ?>" name="<?php echo esc_attr( ANNEFPUGH_HONEYPOT_FIELD ); ?>" value="" tabindex="-1" autocomplete="new-password">
-		</div>
+		<?php echo annefpugh_form_guard_fields( $annefpugh_form_id ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside. ?>
 
 		<div class="form-row">
 			<div class="form-field">

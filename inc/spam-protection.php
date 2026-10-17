@@ -58,12 +58,33 @@ function annefpugh_captcha_active() {
 }
 
 /**
+ * Whether Wordfence is active and the theme should leave log-in security to it.
+ *
+ * Wordfence covers log in, password reset, and registration (brute-force
+ * limits, its own captcha, 2FA), so the theme's own checks for those step
+ * aside instead of doubling up. It doesn't protect theme forms, so the
+ * contact-form guard always stays on. Active (not just installed) counts:
+ * an installed-but-inactive plugin protects nothing.
+ *
+ * Override: add_filter( 'annefpugh_defer_to_wordfence', '__return_false' );
+ * keeps the theme's own log-in checks even with Wordfence active.
+ */
+function annefpugh_defer_to_wordfence() {
+	$active = defined( 'WORDFENCE_VERSION' ) || class_exists( 'wordfence', false );
+	return (bool) apply_filters( 'annefpugh_defer_to_wordfence', $active );
+}
+
+/**
  * Whether a form is protected right now.
  *
  * @param string $form 'contact', 'login', or 'comment'.
  */
 function annefpugh_captcha_protects( $form ) {
 	if ( ! annefpugh_captcha_active() ) {
+		return false;
+	}
+	// Log in / reset / registration / page passwords: Wordfence's job when it's active.
+	if ( 'login' === $form && annefpugh_defer_to_wordfence() ) {
 		return false;
 	}
 	$keys = array(
@@ -179,7 +200,10 @@ function annefpugh_captcha_render_settings() {
 							<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[protect_comments]" value="1" <?php checked( $s['protect_comments'] ); ?>> <?php esc_html_e( 'Comment boxes', 'annefpugh' ); ?></label><br>
 							<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[protect_contact]" value="1" <?php checked( $s['protect_contact'] ); ?>> <?php esc_html_e( 'Contact forms', 'annefpugh' ); ?></label><br>
 							<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[protect_login]" value="1" <?php checked( $s['protect_login'] ); ?>> <?php esc_html_e( 'Log in, password reset, and registration', 'annefpugh' ); ?></label>
-							<p class="description"><?php esc_html_e( 'Comments are turned off on this site; this applies if they\'re ever turned back on. Logged-in users are never checked on comments.', 'annefpugh' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Comments are turned off on this site; this applies if they\'re ever turned back on. Logged-in users are never checked on comments. Password-protected pages use the log in setting.', 'annefpugh' ); ?></p>
+							<?php if ( annefpugh_defer_to_wordfence() ) : ?>
+								<div class="notice notice-info inline"><p><?php esc_html_e( 'Wordfence is active, so it handles log in, password reset, registration, and password-protected pages. The log in setting above is ignored while Wordfence is active. Contact forms are still protected here.', 'annefpugh' ); ?></p></div>
+							<?php endif; ?>
 						</fieldset>
 					</td>
 				</tr>

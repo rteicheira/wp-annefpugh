@@ -9,6 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ANNEFPUGH_VERSION', '1.1.0' );
 
-foreach ( array( 'template-functions', 'setup', 'disable-comments', 'hardening', 'post-types', 'customizer', 'custom-css', 'spam-protection', 'contact-form', 'schema', 'admin-practice-info', 'admin-service-order' ) as $annefpugh_file ) {
+foreach ( array( 'template-functions', 'setup', 'disable-comments', 'hardening', 'post-types', 'customizer', 'custom-css', 'spam-protection', 'form-guard', 'contact-form', 'schema', 'admin-practice-info', 'admin-service-order' ) as $annefpugh_file ) {
 	require get_template_directory() . '/inc/' . $annefpugh_file . '.php';
 }

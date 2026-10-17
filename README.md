@@ -37,7 +37,8 @@ inc/
   admin-service-order.php     Services → Change Order (drag-and-drop + Move up/down)
   spam-protection.php         Settings → Spam Protection (Turnstile / reCAPTCHA: forms, login, comments)
   custom-css.php              Customizer colors → contrast-checked CSS custom properties
-  contact-form.php            Form handler (honeypot, signed timestamp, rate limit, reCAPTCHA, wp_mail)
+  form-guard.php              Anti-spam for every public form (honeypot, timestamp, rate limits, link check, page passwords, password reset, no sign-ups)
+  contact-form.php            Contact form handler (uses form-guard.php; sends with wp_mail)
   schema.php                  MedicalBusiness JSON-LD (skipped if an SEO plugin is active)
 template-parts/
   crisis-bar.php              Optional 988/911 bar above the header
@@ -106,9 +107,10 @@ audits/                       Code reviews — never deployed (see deployafp.sh)
   - **Honeypot:** a hidden field that only bots fill in.
   - **Signed timestamp in each form:** rejects anything submitted faster than a person can type. Unlike a WordPress nonce it never expires, so forms keep working on cached pages.
   - **Rate limit:** 5 messages per visitor per 10 minutes.
+  - **Link check:** a message with more than 2 links is delivered with **[Possible spam]** at the start of the subject and a warning not to click the links. Messages are never dropped for this.
   - **Behind Cloudflare:** add `add_filter( 'annefpugh_trust_cloudflare_ip', '__return_true' );` so the limit uses the real visitor IP. Without it, the `CF-Connecting-IP` header is ignored, because anyone can fake it when the site isn't behind Cloudflare.
 - **Cloudflare Turnstile or Google reCAPTCHA** (optional), under **Settings → Spam Protection**. The layout and wording match the russteicheira theme.
-  - **Protect:** *Comment boxes* (comments are off on this site; this applies if they're turned back on), *Contact forms* (the Contact page and "Request a call back"), and *Log in, password reset, and registration*.
+  - **Protect:** *Comment boxes* (comments are off on this site; this applies if they're turned back on), *Contact forms* (the Contact page and "Request a call back"), and *Log in, password reset, and registration* (also covers the password form on password-protected pages).
   - **Provider:** Turnstile (recommended) or reCAPTCHA v3 (invisible) / v2 (checkbox). Each keeps its own keys, so you can switch back and forth. Secrets are never shown again after saving.
   - **Checks:** a strictness score for reCAPTCHA v3; tokens must be issued for this site's domain (override with the `annefpugh_captcha_hostname` filter) and for the same form.
   - **Loading:** the provider's script only loads on pages with a protected form, and (except reCAPTCHA v2) only once a visitor starts filling it in.
@@ -117,6 +119,24 @@ audits/                       Code reviews — never deployed (see deployafp.sh)
   - **Test first:** after saving, open the login page in a private window and make sure you can still log in.
   - **Locked out?** Add `define( 'ANNEFPUGH_SPAM_PROTECTION_OFF', true );` to `wp-config.php`, log in, fix the settings, then remove the line. While it's set, the settings page shows a warning that protection is switched off.
   - Both services receive visitor data, so mention the one you use in the Privacy Policy.
+- **Other public forms** (`inc/form-guard.php`):
+  - **Password-protected pages:** the page-password form gets the honeypot, signed timestamp, and the log-in Turnstile/reCAPTCHA check, plus a limit of 10 attempts per visitor per 10 minutes, so page passwords can't be guessed.
+  - **Password reset:** at most 5 "Lost your password?" requests per visitor per hour, even with Turnstile/reCAPTCHA off, so nobody can flood your inbox with reset emails.
+  - **Registration is always off.** The site has no member accounts, so "Anyone can register" is forced off and no spam accounts can be created.
+  - **Search** is switched off (see *Hardening*), and **comments, pingbacks, and trackbacks** are closed (see above).
+- **With Wordfence active,** the theme leaves log-in security to Wordfence. Wordfence covers log in, password reset and registration with brute-force limits, its own captcha and 2FA.
+  - **Turned off:**
+    - the log-in, password-reset and registration Turnstile/reCAPTCHA check
+    - the password-reset rate limit
+    - the page-password guard
+  - **Still on:**
+    - the contact-form guard (honeypot, timestamp, rate limit, link check, and Turnstile/reCAPTCHA), because Wordfence doesn't protect theme forms
+    - forced-off registration
+    - everything under *Hardening*
+  - **Settings screen:** Settings → Spam Protection shows a notice while this is in effect.
+  - **Active, not just installed:** an installed but deactivated Wordfence protects nothing, so the theme's own checks stay on.
+  - **Keeping the theme's checks anyway:** add `add_filter( 'annefpugh_defer_to_wordfence', '__return_false' );`.
+- **Adding a form later:** every new public form must use `inc/form-guard.php`. Print `annefpugh_form_guard_fields( 'my-form' )` inside it and `annefpugh_captcha_field_html( 'contact' )` before the submit button. Call `annefpugh_form_guard_check( 'my-form' )` first in its handler, then `annefpugh_form_guard_record( 'my-form' )` once accepted. The steps are also in the file's header.
 - Field lengths are enforced on the server, and failed emails are logged to the PHP error log.
 - The contact forms ask visitors not to send sensitive health details. It sends via `wp_mail()` and stores nothing in the database. It's not a HIPAA-compliant intake — use a proper client portal for that.
 - No external fonts or scripts are loaded, so visitors' data isn't sent to third parties.

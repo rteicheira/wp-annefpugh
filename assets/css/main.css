@@ -1183,9 +1183,18 @@ html:has(.service-dialog[open]) {
 
 .afp-captcha__msg {
 	margin: 0;
+	padding: 0.6rem 0.85rem;
+	border-left: 4px solid currentColor;
+	border-radius: 8px;
 	font-size: 0.9375rem;
 	font-weight: 600;
+	/* Own background (like .notice--error): readable whatever the card color. */
+	background: #fbeaea;
 	color: #8a1f1f;
+}
+
+.afp-captcha__msg[hidden] {
+	display: none;
 }
 
 .afp-captcha__note {

@@ -3,20 +3,14 @@
  * Contact form handler (both the Contact page form and the homepage
  * "quick" form), sending to the email set under Practice Info.
  *
- * Spam defenses, in order: honeypot field, signed form timestamp (catches
- * instant bot submissions; unlike a nonce it never expires, so it works on
- * cached pages), per-visitor rate limit, optional Turnstile/reCAPTCHA
- * (inc/spam-protection.php).
+ * Spam defenses come from inc/form-guard.php: honeypot, signed timestamp,
+ * per-visitor rate limit, optional Turnstile/reCAPTCHA, and a link check.
+ * Doubtful messages are delivered with a warning in the subject, never dropped.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-const ANNEFPUGH_FORM_MIN_SECONDS = 3;          // Faster than this is a bot.
-const ANNEFPUGH_RATE_LIMIT       = 5;          // Messages per visitor...
-const ANNEFPUGH_RATE_WINDOW      = 600;        // ...per 10 minutes.
-const ANNEFPUGH_HONEYPOT_FIELD   = 'afp_extra_field';
 
 /**
  * Field length limits, enforced on the server (the form's maxlength
@@ -29,32 +23,6 @@ function annefpugh_contact_limits() {
 		'annefpugh_phone'   => 30,
 		'annefpugh_message' => 2000,
 	);
-}
-
-/**
- * "<unix time>.<hmac>" — printed into each form when it's rendered.
- */
-function annefpugh_form_token() {
-	$time = (string) time();
-	return $time . '.' . hash_hmac( 'sha256', $time, wp_salt( 'nonce' ) );
-}
-
-/**
- * Seconds since a form token was rendered, or false if it's missing/forged.
- */
-function annefpugh_form_token_age( $token ) {
-	$parts = explode( '.', (string) $token, 2 );
-	if ( 2 !== count( $parts ) || ! ctype_digit( $parts[0] ) ) {
-		return false;
-	}
-	if ( ! hash_equals( hash_hmac( 'sha256', $parts[0], wp_salt( 'nonce' ) ), $parts[1] ) ) {
-		return false;
-	}
-	return time() - (int) $parts[0];
-}
-
-function annefpugh_rate_limit_key() {
-	return 'annefpugh_rl_' . md5( annefpugh_client_ip() . wp_salt( 'nonce' ) );
 }
 
 function annefpugh_contact_redirect( $status, $base, $form_id ) {
@@ -86,37 +54,22 @@ function annefpugh_handle_contact_form() {
 	$form_id = sanitize_key( annefpugh_contact_field( 'annefpugh_form' ) );
 	$form_id = '' !== $form_id ? $form_id : 'contact-form';
 
-	// 1. Honeypot: humans never see or fill this field. Pretend it worked.
-	if ( '' !== annefpugh_contact_field( ANNEFPUGH_HONEYPOT_FIELD ) ) {
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			error_log( 'annefpugh contact form: honeypot filled, message discarded.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
-		}
-		annefpugh_contact_redirect( 'sent', $base, $form_id );
+	// 1. Spam checks (inc/form-guard.php). A filled honeypot pretends it worked.
+	$guard    = annefpugh_form_guard_check( 'contact', array( 'text' => annefpugh_contact_field( 'annefpugh_message' ) ) );
+	$redirect = array(
+		'honeypot' => 'sent',
+		'expired'  => 'expired',
+		'too_fast' => 'spam',
+		'busy'     => 'busy',
+		'spam'     => 'spam',
+	);
+	if ( isset( $redirect[ $guard['status'] ] ) ) {
+		annefpugh_contact_redirect( $redirect[ $guard['status'] ], $base, $form_id );
 	}
+	$unverified = in_array( 'unverified', $guard['flags'], true );
+	$links      = in_array( 'links', $guard['flags'], true );
 
-	// 2. Signed timestamp: missing/forged → stale page; too fast → bot.
-	$age = annefpugh_form_token_age( annefpugh_contact_field( 'annefpugh_ts' ) );
-	if ( false === $age ) {
-		annefpugh_contact_redirect( 'expired', $base, $form_id );
-	}
-	if ( $age < ANNEFPUGH_FORM_MIN_SECONDS ) {
-		annefpugh_contact_redirect( 'spam', $base, $form_id );
-	}
-
-	// 3. Rate limit per visitor.
-	$rate_key = annefpugh_rate_limit_key();
-	$hits     = (int) get_transient( $rate_key );
-	if ( $hits >= ANNEFPUGH_RATE_LIMIT ) {
-		annefpugh_contact_redirect( 'busy', $base, $form_id );
-	}
-
-	// 4. Turnstile / reCAPTCHA (Settings → Spam Protection, when configured).
-	$captcha = annefpugh_captcha_protects( 'contact' ) ? annefpugh_captcha_verify( annefpugh_captcha_posted_token(), 'contact' ) : 'pass';
-	if ( 'fail' === $captcha ) {
-		annefpugh_contact_redirect( 'spam', $base, $form_id );
-	}
-
-	// 5. Validate.
+	// 2. Validate.
 	$quick   = 'quick' === annefpugh_contact_field( 'annefpugh_variant' );
 	$name    = sanitize_text_field( annefpugh_contact_field( 'annefpugh_name' ) );
 	$email   = sanitize_email( annefpugh_contact_field( 'annefpugh_email' ) );
@@ -133,8 +86,8 @@ function annefpugh_handle_contact_form() {
 		annefpugh_contact_redirect( 'invalid', $base, $form_id );
 	}
 
-	// 6. Send.
-	set_transient( $rate_key, $hits + 1, ANNEFPUGH_RATE_WINDOW );
+	// 3. Send.
+	annefpugh_form_guard_record( 'contact' );
 
 	$to       = is_email( annefpugh_mod( 'email' ) ) ? annefpugh_mod( 'email' ) : get_option( 'admin_email' );
 	$site     = wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
@@ -143,7 +96,9 @@ function annefpugh_handle_contact_form() {
 		? sprintf( __( 'Call-back request — %s', 'annefpugh' ), $site )
 		/* translators: %s: site name */
 		: sprintf( __( 'New consultation request — %s', 'annefpugh' ), $site );
-	if ( 'unverified' === $captcha ) {
+	if ( $links ) {
+		$subject = __( '[Possible spam] ', 'annefpugh' ) . $subject;
+	} elseif ( $unverified ) {
 		$subject = __( '[Unverified] ', 'annefpugh' ) . $subject;
 	}
 
@@ -157,7 +112,11 @@ function annefpugh_handle_contact_form() {
 	$lines[] = '';
 	$lines[] = $quick ? 'What they\'re looking for:' : 'Message:';
 	$lines[] = $message;
-	if ( 'unverified' === $captcha ) {
+	if ( $links ) {
+		$lines[] = '';
+		$lines[] = '(This message contains several links, which is common in spam. Don\'t click them unless you recognize the sender.)';
+	}
+	if ( $unverified ) {
 		$lines[] = '';
 		$lines[] = '(Spam protection couldn\'t check this message — the sender\'s browser may block the security check. It\'s probably a real person, but use your judgment.)';
 	}
