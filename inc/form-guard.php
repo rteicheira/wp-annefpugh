@@ -10,6 +10,9 @@
  *  4. Turnstile / reCAPTCHA when switched on (inc/spam-protection.php).
  *  5. Link check: messages stuffed with links are flagged, never dropped.
  *
+ * Comments: wherever they're open, the comment form gets the same guard, and
+ * comments are text only with no website URL (see "COMMENTS" below).
+ *
  * Forms covered: the contact forms (inc/contact-form.php), password-protected
  * pages, password reset, and log in (inc/spam-protection.php). Registration
  * is switched off: this site has no member accounts.
@@ -189,6 +192,161 @@ function annefpugh_form_guard_check( $form_id, $args = array() ) {
 
 	return $result;
 }
+
+
+// ── COMMENTS ──────────────────────────────────────────────────
+// Applies wherever comments are open (this site keeps them closed; these
+// rules are in place in case that changes). Honeypot + timestamp + 5
+// comments per visitor per 10 minutes, checked before the Turnstile/reCAPTCHA
+// check (which keeps holding unverified comments for moderation). Logged-in
+// users and pingbacks are never checked here. Link-heavy comments are already held by
+// WordPress (Settings → Discussion → "Hold a comment… if it contains 2 or more links").
+const ANNEFPUGH_COMMENT_LIMIT = 5;
+
+add_filter(
+	'comment_form_submit_field',
+	function ( $submit_field ) {
+		return is_user_logged_in() ? $submit_field : annefpugh_form_guard_fields( 'comment' ) . $submit_field;
+	},
+	5
+);
+
+function annefpugh_guard_comment( $commentdata ) {
+	if ( ! did_action( 'pre_comment_on_post' ) || is_user_logged_in() ) {
+		return $commentdata;
+	}
+	$type = isset( $commentdata['comment_type'] ) ? $commentdata['comment_type'] : '';
+	if ( '' !== $type && 'comment' !== $type ) {
+		return $commentdata;
+	}
+
+	$check = annefpugh_form_guard_check(
+		'comment',
+		array(
+			'captcha' => false, // annefpugh_captcha_check_comment() handles it, holding unverified comments.
+			'limit'   => ANNEFPUGH_COMMENT_LIMIT,
+		)
+	);
+	if ( 'ok' === $check['status'] ) {
+		annefpugh_form_guard_record( 'comment' );
+		return $commentdata;
+	}
+
+	$messages = array(
+		'busy'    => __( 'You\'ve posted several comments in a short time. Please wait a few minutes, then try again.', 'annefpugh' ),
+		'expired' => __( 'This page was open too long or didn\'t load fully. Please go back, refresh the page, and post your comment again.', 'annefpugh' ),
+	);
+	wp_die(
+		esc_html( isset( $messages[ $check['status'] ] ) ? $messages[ $check['status'] ] : __( 'Your comment couldn\'t be verified as coming from a person. Please go back and try again.', 'annefpugh' ) ),
+		esc_html__( 'Comment not posted', 'annefpugh' ),
+		array(
+			'response'  => 'busy' === $check['status'] ? 429 : 403,
+			'back_link' => true,
+		)
+	);
+}
+add_filter( 'preprocess_comment', 'annefpugh_guard_comment', 1 );
+
+
+// ── TEXT-ONLY COMMENTS, NO WEBSITE URL ───────────────────────
+// The comment form has no Website field (functions.php removes it), but
+// WordPress's comment handler (wp-comments-post.php) still accepts a "url"
+// value from anything that posts to it directly — which is how spam bots
+// attach their links. And core lets comments keep some HTML (<a>, <b>,
+// <blockquote>…) and turns typed web addresses into links. So:
+//  - a logged-out submission that sends a "url" is a bot (people can't fill a
+//    field the form doesn't have) and is refused;
+//  - no comment ever stores a website URL, and none is shown as a link;
+//  - comment text is plain text only: all HTML is stripped when saved and
+//    again when shown (covers comments saved before this);
+//  - typed web addresses stay plain text, and a logged-out comment that
+//    contains one waits for moderation instead of being published.
+// Other comment types (pingbacks, trackbacks) keep their own data.
+
+// No Website field on the comment form.
+add_filter(
+	'comment_form_default_fields',
+	function ( $fields ) {
+		unset( $fields['url'] );
+		return $fields;
+	}
+);
+
+function annefpugh_is_regular_comment( $comment_type ) {
+	return '' === (string) $comment_type || 'comment' === $comment_type;
+}
+
+function annefpugh_comment_no_url( $commentdata ) {
+	$type = isset( $commentdata['comment_type'] ) ? $commentdata['comment_type'] : '';
+	if ( ! annefpugh_is_regular_comment( $type ) ) {
+		return $commentdata;
+	}
+	// phpcs:ignore WordPress.Security.NonceVerification -- only checks whether a field the form doesn't have was sent.
+	$sent_url = isset( $_POST['url'] ) ? trim( (string) wp_unslash( $_POST['url'] ) ) : '';
+	if ( '' !== $sent_url && did_action( 'pre_comment_on_post' ) && ! is_user_logged_in() ) {
+		wp_die(
+			esc_html__( 'Your comment couldn\'t be verified as coming from a person. Please go back and try again.', 'annefpugh' ),
+			esc_html__( 'Comment not posted', 'annefpugh' ),
+			array(
+				'response'  => 403,
+				'back_link' => true,
+			)
+		);
+	}
+	$commentdata['comment_author_url'] = '';
+	return $commentdata;
+}
+add_filter( 'preprocess_comment', 'annefpugh_comment_no_url', 0 );
+
+/**
+ * Plain text only: strip every tag (links, formatting, scripts, styles) but
+ * keep the line breaks people typed.
+ */
+function annefpugh_comment_plain_text( $content ) {
+	return trim( wp_strip_all_tags( (string) $content, false ) );
+}
+add_filter( 'pre_comment_content', 'annefpugh_comment_plain_text', 1 );
+
+// Never show a website for a regular comment (annefpugh_comment_no_url() above stops
+// new ones being stored; this also hides URLs saved before that).
+add_filter(
+	'get_comment_author_url',
+	function ( $url, $comment_id, $comment ) {
+		return ( $comment instanceof WP_Comment && ! annefpugh_is_regular_comment( $comment->comment_type ) ) ? $url : '';
+	},
+	99,
+	3
+);
+
+// Shown as plain text too, so comments saved before this can't render HTML.
+add_filter(
+	'comment_text',
+	function ( $text, $comment = null ) {
+		if ( $comment instanceof WP_Comment && ! annefpugh_is_regular_comment( $comment->comment_type ) ) {
+			return $text;
+		}
+		return wp_strip_all_tags( $text, false );
+	},
+	1,
+	2
+);
+// Typed web addresses stay plain text (core would turn them into links).
+remove_filter( 'comment_text', 'make_clickable', 9 );
+
+/**
+ * Logged-out comments that mention a web address wait for moderation.
+ */
+function annefpugh_comment_links_need_approval( $approved, $commentdata ) {
+	if ( is_user_logged_in() || 'spam' === $approved || 'trash' === $approved || is_wp_error( $approved ) ) {
+		return $approved;
+	}
+	$type = isset( $commentdata['comment_type'] ) ? $commentdata['comment_type'] : '';
+	if ( annefpugh_is_regular_comment( $type ) && annefpugh_count_links( isset( $commentdata['comment_content'] ) ? $commentdata['comment_content'] : '' ) > 0 ) {
+		return 0;
+	}
+	return $approved;
+}
+add_filter( 'pre_comment_approved', 'annefpugh_comment_links_need_approval', 20, 2 );
 
 
 // ── PASSWORD-PROTECTED PAGES ──────────────────────────────────

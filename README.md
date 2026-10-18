@@ -114,6 +114,7 @@ audits/                       Code reviews — never deployed (see deployafp.sh)
   - **Provider:** Turnstile (recommended) or reCAPTCHA v3 (invisible) / v2 (checkbox). Each keeps its own keys, so you can switch back and forth. Secrets are never shown again after saving.
   - **Checks:** a strictness score for reCAPTCHA v3; tokens must be issued for this site's domain (override with the `annefpugh_captcha_hostname` filter) and for the same form.
   - **Loading:** the provider's script only loads on pages with a protected form, and (except reCAPTCHA v2) only once a visitor starts filling it in.
+  - **Comments** (if they're ever switched back on): a comment sent without completing the check is refused, because that's what spam bots do. Only a provider outage lets a comment through, held for moderation.
   - **Contact messages are never lost.** If the visitor's browser blocks the check, or the provider can't be reached, the message is delivered with **[Unverified]** at the start of the subject. Only messages the provider positively flags are rejected.
   - **Login is stricter.** A login or password reset without a completed check is refused, so bots can't skip it. Only an unreachable provider lets a login through, so an outage can't lock you out. Application-password logins aren't affected. XML-RPC is switched off entirely (see *Hardening* below), so it can't be used to get around the check.
   - **Test first:** after saving, open the login page in a private window and make sure you can still log in.
@@ -124,6 +125,11 @@ audits/                       Code reviews — never deployed (see deployafp.sh)
   - **Password reset:** at most 5 "Lost your password?" requests per visitor per hour, even with Turnstile/reCAPTCHA off, so nobody can flood your inbox with reset emails.
   - **Registration is always off.** The site has no member accounts, so "Anyone can register" is forced off and no spam accounts can be created.
   - **Search** is switched off (see *Hardening*), and **comments, pingbacks, and trackbacks** are closed (see above).
+  - **If comments are ever switched back on:** the comment form gets the same honeypot, timestamp, and limit (5 per visitor per 10 minutes). Comments are also text only, with no website URL:
+    - **Bots refused:** a submission that sends a website URL is refused (only a bot can fill a field the form doesn't have).
+    - **No website shown:** no website is stored or shown.
+    - **Plain text:** all HTML is stripped on save and on display, and typed web addresses aren't turned into links.
+    - **Moderation:** a logged-out comment containing a web address waits for approval.
 - **With Wordfence active,** the theme leaves log-in security to Wordfence. Wordfence covers log in, password reset and registration with brute-force limits, its own captcha and 2FA.
   - **Turned off:**
     - the log-in, password-reset and registration Turnstile/reCAPTCHA check
