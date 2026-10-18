@@ -156,4 +156,5 @@ audits/                       Code reviews — never deployed (see deployafp.sh)
     - oEmbed data has no author
     - there's no users sitemap
     - the login page says "username, email address, or password is incorrect" without saying which
+    - the "Lost your password?" form shows the same "Check your email" page whether or not the account exists (an email is only sent for a real one)
   - **No blog pages:** search results and author, category, tag and date archives return a proper 404, and `/feed/` redirects to the homepage. A no-blog site has nothing to show there.
